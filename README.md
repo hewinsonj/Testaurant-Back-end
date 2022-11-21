@@ -1,7 +1,7 @@
-# Testuraunt
+# Testaurant
 
-Testuraunt is an application designed to help resturaunt employees learn about menu items and to help employers keep their employees accountable.
-In depth lesson plans with visual aids can be created by employers that can help employees learn about menu items, products offered, company policies and more. Employers will also have the ability to create customizable tests that their employees can take with an array of question formats, such as "multipule choice", "select all that apply", "fill in the blanks", "true or false" and "open ended". Their scores will be logged for viewability between the employee and managament through the use of personalized accounts made by the users. Users of Testuraunt will also have the ability to add any items they wish to a searchable database of their offerings to aid them in accomidating guests with specific needs, or for educational purposes. The goal is to help shine some light on the gaps of knowledge that may exist within a company, and to close those gaps as they are discovered.
+Testaurant is an application designed to help restaurant employees learn about menu items and to help employers keep their employees accountable.
+In depth lesson plans with visual aids can be created by employers that can help employees learn about menu items, products offered, company policies and more. Employers will also have the ability to create customizable tests that their employees can take with an array of question formats, such as "multiple choice", "select all that apply", "fill in the blanks", "true or false" and "open ended". Their scores will be logged for viewability between the employee and management through the use of personalized accounts made by the users. Users of Testaurant will also have the ability to add any items they wish to a searchable database of their offerings to aid them in accomodating guests with specific needs, or for educational purposes. The goal is to help shine some light on the gaps of knowledge that may exist within a company, and to close those gaps as they are discovered.
 
 Justin Hewinson - Sole creator and developer of Testuraunt
 
@@ -47,7 +47,7 @@ The application will consist of a backend API using Django and a client-side int
     - Symantic
 
 ## Schedule
-    - Moday - Pseudo Code
+    - Monday - Pseudo Code
     - Tuesday - Back-end
     - Wednesday - Back-end
     - Thursday - (BREAK)
@@ -59,6 +59,7 @@ The application will consist of a backend API using Django and a client-side int
     - Wednesday - Front-end
     - Thursday - Front-end
     - Friday - Presentation
+
 
     
 
