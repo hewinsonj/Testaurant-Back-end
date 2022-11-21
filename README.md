@@ -3,7 +3,7 @@
 Testaurant is an application designed to help restaurant employees learn about menu items and to help employers keep their employees accountable.
 In depth lesson plans with visual aids can be created by employers that can help employees learn about menu items, products offered, company policies and more. Employers will also have the ability to create customizable tests that their employees can take with an array of question formats, such as "multiple choice", "select all that apply", "fill in the blanks", "true or false" and "open ended". Their scores will be logged for viewability between the employee and management through the use of personalized accounts made by the users. Users of Testaurant will also have the ability to add any items they wish to a searchable database of their offerings to aid them in accomodating guests with specific needs, or for educational purposes. The goal is to help shine some light on the gaps of knowledge that may exist within a company, and to close those gaps as they are discovered.
 
-Justin Hewinson - Sole creator and developer of Testuraunt
+Justin Hewinson - Sole creator and developer of Testaurant
 
 
 As a user, I want the ability to...
