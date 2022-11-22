@@ -1,5 +1,5 @@
 """
-WSGI config for testaurant_app_template project.
+WSGI config for testaurant_app_crud_template project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'testaurant_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'testaurant_app_crud.settings')
 
 application = get_wsgi_application()

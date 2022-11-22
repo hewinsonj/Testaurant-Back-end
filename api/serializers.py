@@ -2,12 +2,36 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models.mango import Mango
+from .models.question import Question
 from .models.user import User
+from .models.food import Food
+from .models.drink import Drink
+from .models.test import Test
 
 class MangoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Mango
         fields = ('id', 'name', 'color', 'ripe', 'owner')
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Question
+
+class FoodSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Food
+
+class TestSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Test
+    
+class DrinkSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = '__all__'
+        model = Drink
 
 class UserSerializer(serializers.ModelSerializer):
     # This model serializer will be used for User creation

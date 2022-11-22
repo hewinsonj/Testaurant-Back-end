@@ -1,5 +1,5 @@
 """
-ASGI config for testaurant_app project.
+ASGI config for testaurant_app_crud project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'testaurant_app.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'testaurant_app_crud.settings')
 
 application = get_asgi_application()
