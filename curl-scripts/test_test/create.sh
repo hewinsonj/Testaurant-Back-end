@@ -1,12 +1,12 @@
 #!/bin/bash
 
-curl "http://localhost:8000/tests/${ID}/" \
+curl "http://localhost:8000/test_tests/" \
   --include \
-  --request PATCH \
+  --request POST \
   --header "Content-Type: application/json" \
   --header "Authorization: Token ${TOKEN}" \
   --data '{
-    "test": {
+    "test_test": {
       "name": "'"${NAME}"'",
       "created_at": "'"${CREATED_AT}"'",
       "updated_at": "'"${UPDATED_AT}"'",
