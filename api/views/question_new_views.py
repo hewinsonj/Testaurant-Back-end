@@ -14,9 +14,9 @@ class Question_news(generics.ListCreateAPIView):
     def get(self, request):
         """Index request"""
         # Get all the question_news:
-        #question_news = Question_new.objects.all()
+        question_news = Question_new.objects.all()
         # Filter the question_news by owner, so you can only see your owned question_news
-        question_news = Question_new.objects.filter(owner=request.user.id)
+        # question_news = Question_new.objects
         # Run the data through the serializer
         data = Question_newSerializer(question_news, many=True).data
         return Response({ 'question_news': data })

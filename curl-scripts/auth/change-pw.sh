@@ -6,7 +6,8 @@ curl "http://localhost:8000/change-pw/" \
   --data '{
     "passwords": {
       "old": "'"${OLDPW}"'",
-      "new": "'"${NEWPW}"'"
+      "new": "'"${NEWPW}"'",
+      "password_confirmation": "'"${PASSWORD}"'"
     }
   }'
 

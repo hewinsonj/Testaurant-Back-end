@@ -160,3 +160,15 @@ class ChangePasswordSerializer(serializers.Serializer):
     model = get_user_model()
     old = serializers.CharField(required=True)
     new = serializers.CharField(required=True)
+    password_confirmation = serializers.CharField(required=True, write_only=True)
+    def validate(self, data):
+        # Ensure password & password_confirmation exist
+        if not data['new'] or not data['password_confirmation']:
+            raise serializers.ValidationError('Please include a password and password confirmation.')
+
+        # Ensure password & password_confirmation match
+        if data['new'] != data['password_confirmation']:
+            raise serializers.ValidationError('Please make sure your passwords match.')
+        # if all is well, return the data
+        return data
+    
