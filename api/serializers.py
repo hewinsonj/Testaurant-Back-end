@@ -60,11 +60,11 @@ class QuizSerializer(serializers.ModelSerializer):
         return quiz
     
 class Test_thisSerializer(serializers.ModelSerializer):
-    question_news = Question_newSerializer(many=True)
+    # question_news = Question_newSerializer(many=True)
     class Meta:
         model = Test_this
-        fields = ["name", "created_at", "updated_at", "question_news"]
-    def create(self, validated_data, question_news_data):
+        fields = ["name", "created_at", "updated_at", ]
+    def create(self, validated_data):
         question_news_data = validated_data.pop('question_news')
         test_this = Test_this.objects.create(**validated_data)
         for question_new_data in question_news_data:

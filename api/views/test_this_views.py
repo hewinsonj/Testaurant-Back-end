@@ -14,9 +14,9 @@ class Test_thiss(generics.ListCreateAPIView):
     def get(self, request):
         """Index request"""
         # Get all the test_thiss:
-        #test_thiss = Test_this.objects.all()
+        test_thiss = Test_this.objects.all()
         # Filter the test_thiss by owner, so you can only see your owned test_thiss
-        test_thiss = Test_this.objects.filter(owner=request.user.id)
+        # test_thiss = Test_this.objects
         # Run the data through the serializer
         data = Test_thisSerializer(test_thiss, many=True).data
         return Response({ 'test_thiss': data })
