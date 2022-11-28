@@ -36,14 +36,14 @@ class Test_thiss(generics.ListCreateAPIView):
         return Response(test_this.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Test_thisDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes=(IsAuthenticated,)
+    # permission_classes=(IsAuthenticated,)
     def get(self, request, pk):
         """Show request"""
         # Locate the test_this to show
         test_this = get_object_or_404(Test_this, pk=pk)
         # Only want to show owned test_thiss?
-        if request.user != test_this.owner:
-            raise PermissionDenied('Unauthorized, you do not own this test_this')
+        # if request.user != test_this.owner:
+        #     raise PermissionDenied('Unauthorized, you do not own this test_this')
 
         # Run the data through the serializer so it's formatted
         data = Test_thisSerializer(test_this).data

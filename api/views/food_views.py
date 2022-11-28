@@ -14,9 +14,9 @@ class Foods(generics.ListCreateAPIView):
     def get(self, request):
         """Index request"""
         # Get all the foods:
-        # foods = Food.objects.all()
+        foods = Food.objects.all()
         # Filter the foods by owner, so you can only see your owned foods
-        foods = Food.objects.filter(owner=request.user.id)
+        # foods = Food.objects.filter(owner=request.user.id)
         # Run the data through the serializer
         data = FoodSerializer(foods, many=True).data
         return Response({ 'foods': data })

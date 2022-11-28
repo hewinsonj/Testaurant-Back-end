@@ -14,9 +14,9 @@ class Drinks(generics.ListCreateAPIView):
     def get(self, request):
         """Index request"""
         # Get all the drinks:
-        # drinks = Drink.objects.all()
+        drinks = Drink.objects.all()
         # Filter the drinks by owner, so you can only see your owned drinks
-        drinks = Drink.objects.filter(owner=request.user.id)
+        # drinks = Drink.objects.filter(owner=request.user.id)
         # Run the data through the serializer
         data = DrinkSerializer(drinks, many=True).data
         return Response({ 'drinks': data })
