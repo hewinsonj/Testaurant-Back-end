@@ -54,8 +54,8 @@ class Test_thisDetail(generics.RetrieveUpdateDestroyAPIView):
         # Locate test_this to delete
         test_this = get_object_or_404(Test_this, pk=pk)
         # Check the test_this's owner against the user making this request
-        if request.user != test_this.owner:
-            raise PermissionDenied('Unauthorized, you do not own this test_this')
+        # if request.user != test_this.owner:
+        #     raise PermissionDenied('Unauthorized, you do not own this test_this')
         # Only delete if the user owns the  test_this
         test_this.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
