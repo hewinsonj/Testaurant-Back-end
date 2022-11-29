@@ -63,7 +63,7 @@ class Test_thisSerializer(serializers.ModelSerializer):
     question_new = Question_newSerializer(many=True)
     class Meta:
         model = Test_this
-        fields = ('__all__')
+        fields = ('name',  'question_new', 'owner', 'created_at', 'updated_at', 'id')
     def create(self, validated_data):
         question_news_data = validated_data.pop('question_new')
         test_this = Test_this.objects.create(**validated_data)
@@ -72,14 +72,14 @@ class Test_thisSerializer(serializers.ModelSerializer):
         return test_this
 
 class ResultSerializer(serializers.ModelSerializer):
-    the_tests = Test_thisSerializer(many=True)
+    the_test = Test_thisSerializer
     class Meta:
         model = Result
-        fields = ["__all__"]
+        fields = ["the_test", "owner", "id", "score", "correct", "wrong", "percent", "total", "time", "created_at", "updated_at"]
     def create(self, validated_data):
-        the_test_data = validated_data.pop('tests')
-        result = result.objects.create(**validated_data)
-        for the_test_data in the_test_data:
+        the_tests_data = validated_data.pop('the_test')
+        result = Result.objects.create(**validated_data)
+        for the_test_data in the_tests_data:
             Test_this.objects.create(result=result, **the_test_data)
         return result
 

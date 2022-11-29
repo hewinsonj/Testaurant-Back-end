@@ -14,14 +14,15 @@ class Results(generics.ListCreateAPIView):
     def get(self, request):
         """Index request"""
         # Get all the results:
-        #results = Result.objects.all()
+        results = Result.objects.all()
         # Filter the results by owner, so you can only see your owned results
-        results = Result.objects.filter(owner=request.user.id)
+        # results = Result.objects.filter(owner=request.user.id)
         # Run the data through the serializer
         data = ResultSerializer(results, many=True).data
         return Response({ 'results': data })
 
     def post(self, request):
+        print(request.data)
         """Create request"""
         # Add user to request data object
         request.data['result']['owner'] = request.user.id
@@ -66,8 +67,8 @@ class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
         # get_object_or_404 returns a object representation of our Result
         result = get_object_or_404(Result, pk=pk)
         # Check the result's owner against the user making this request
-        if request.user != result.owner:
-            raise PermissionDenied('Unauthorized, you do not own this result')
+        # if request.user != result.owner:
+        #     raise PermissionDenied('Unauthorized, you do not own this result')
 
         # Ensure the owner field is set to the current user's ID
         request.data['result']['owner'] = request.user.id

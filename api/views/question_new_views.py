@@ -54,8 +54,8 @@ class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
         # Locate question_new to delete
         question_new = get_object_or_404(Question_new, pk=pk)
         # Check the question_new's owner against the user making this request
-        if request.user != question_new.owner:
-            raise PermissionDenied('Unauthorized, you do not own this question_new')
+        # if request.user != question_new.owner:
+        #     raise PermissionDenied('Unauthorized, you do not own this question_new')
         # Only delete if the user owns the  question_new
         question_new.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -70,7 +70,7 @@ class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
             raise PermissionDenied('Unauthorized, you do not own this question_new')
 
         # Ensure the owner field is set to the current user's ID
-        request.data['question_new']['owner'] = request.user.id
+        # request.data['question_new']['owner'] = request.user.id
         # Validate updates with serializer
         data = Question_newSerializer(question_new, data=request.data['question_new'], partial=True)
         if data.is_valid():
