@@ -22,6 +22,7 @@ class Test_thiss(generics.ListCreateAPIView):
         return Response({ 'test_thiss': data })
 
     def post(self, request):
+        print(request.data)
         """Create request"""
         # Add user to request data object
         request.data['test_this']['owner'] = request.user.id
