@@ -8,13 +8,11 @@ curl "http://localhost:8000/results/" \
   --data '{
     "result": {
       "score": "'"${SCORE}"'",
-      "correct": "'"${CORRECT}"'",
+      "correct": "'"${CORRECTT}"'",
       "wrong": "'"${WRONG}"'",
       "total": "'"${TOTAL}"'",
       "percent": "'"${PERCENT}"'",
       "time": "'"${TIME}"'",
-      "created_at": "'"${CREATED_AT}"'",
-      "updated_at": "'"${UPDATED_AT}"'",
     }
   }'
 

@@ -22,6 +22,7 @@ class Question_news(generics.ListCreateAPIView):
         return Response({ 'question_news': data })
 
     def post(self, request):
+        print(request.data)
         """Create request"""
         # Add user to request data object
         request.data['question_new']['owner'] = request.user.id

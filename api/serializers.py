@@ -60,27 +60,44 @@ class QuizSerializer(serializers.ModelSerializer):
         return quiz
     
 class Test_thisSerializer(serializers.ModelSerializer):
-    question_new = Question_newSerializer(many=True)
+    question_new = Question_newSerializer(many=True, read_only=True
+    )
     class Meta:
         model = Test_this
-        fields = ('name',  'question_new', 'owner', 'created_at', 'updated_at', 'id')
+        fields = ('name', 'question_new', 'owner', 'created_at', 'updated_at', 'id')
     def create(self, validated_data):
-        question_news_data = validated_data.pop('question_new')
+        # question_new_data = validated_data.pop('question_new')
         test_this = Test_this.objects.create(**validated_data)
-        for question_new_data in question_news_data:
-            Question_new.objects.create(test_this=test_this, **question_new_data)
+        # for question_new_data in question_new_data:
+        #     Question_new.objects.create(test_this=test_this, **question_new_data)
         return test_this
 
+# class Test_this_create_Serializer(serializers.ModelSerializer):
+#     question_new = Question_newSerializer(many=True)
+#     class Meta:
+#         model = Test_this
+#         fields = ('name', 'owner', 'question_new', 'created_at', 'updated_at', 'id') 
+#         extra_kwargs = {'question_new': {'required': False}}
+#     def create(self, validated_data):
+#         question_news_data = validated_data.pop('question_new')
+#         test_this = Test_this.objects.create(**validated_data)
+#         for question_new_data in question_news_data:
+#             Question_new.objects.create(test_this=test_this, **question_new_data)
+#         return test_this
+
+   
+
 class ResultSerializer(serializers.ModelSerializer):
-    the_test = Test_thisSerializer
+    the_test = Test_thisSerializer#(null=True)
     class Meta:
         model = Result
         fields = ["the_test", "owner", "id", "score", "correct", "wrong", "percent", "total", "time", "created_at", "updated_at"]
+       
     def create(self, validated_data):
-        the_tests_data = validated_data.pop('the_test')
+        # the_tests_data = validated_data.pop('the_test')
         result = Result.objects.create(**validated_data)
-        for the_test_data in the_tests_data:
-            Test_this.objects.create(result=result, **the_test_data)
+        # for the_test_data in the_tests_data:
+        #     Test_this.objects.create(result=result, **the_test_data)
         return result
 
 class Quiz_testSerializer(serializers.ModelSerializer):

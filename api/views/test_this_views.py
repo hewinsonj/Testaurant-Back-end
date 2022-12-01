@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 
 from ..models.test_this import Test_this
 from ..serializers import Test_thisSerializer
+# from ..serializers import Test_this_create_Serializer
 
 # Create your views here.
 class Test_thiss(generics.ListCreateAPIView):
@@ -27,11 +28,27 @@ class Test_thiss(generics.ListCreateAPIView):
         # Add user to request data object
         request.data['test_this']['owner'] = request.user.id
         # Serialize/create test_this
+        # temp_question_arr = request.data['test_this']['question_new']
+
+        # print(temp_question_arr, 'This is the temp q arr')
+        # request.data['test_this']['question_new'] = []
         test_this = Test_thisSerializer(data=request.data['test_this'])
+        # print(test_this, 'This is after the serializer')
         # If the test_this data is valid according to our serializer...
         if test_this.is_valid():
+            print('First test')
             # Save the created test_this & send a response
             test_this.save()
+            # test_this.save_m2m()
+            # print('Second Test')
+            # for question in temp_question_arr:
+            #     # test_this.question_new = []
+            #     test_this['question_new'].add(question)            
+            # print('Third Test')
+            # test_this.save()
+            # test_this['question_new'] = temp_question_arr
+            # test_this.save()
+            # print(test_this.question_new, 'this is the test after the reassignment from temp')
             return Response({ 'test_this': test_this.data }, status=status.HTTP_201_CREATED)
         # If the data is not valid, return a response with the errors
         return Response(test_this.errors, status=status.HTTP_400_BAD_REQUEST)

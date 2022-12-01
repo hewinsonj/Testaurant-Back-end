@@ -96,3 +96,16 @@ class ChangePassword(generics.UpdateAPIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Users(generics.ListCreateAPIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class = UserSerializer
+    def get(self, request):
+        """Index request"""
+        # Get all the test_thiss:
+        users = User.objects.all()
+        # Filter the test_thiss by owner, so you can only see your owned test_thiss
+        # test_thiss = Test_this.objects
+        # Run the data through the serializer
+        data = UserSerializer(users, many=True).data
+        return Response({ 'users': data })

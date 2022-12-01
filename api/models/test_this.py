@@ -7,7 +7,7 @@ class Test_this(models.Model):
   # define fields
   # https://docs.djangoproject.com/en/3.0/ref/models/fields/
     name = models.CharField(max_length=1000)
-    question_new = models.ManyToManyField(Question_new)
+    question_new = models.ManyToManyField(Question_new)#, allow_empty = True
     owner = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE
