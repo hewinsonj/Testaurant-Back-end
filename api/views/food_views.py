@@ -66,8 +66,8 @@ class FoodDetail(generics.RetrieveUpdateDestroyAPIView):
         # get_object_or_404 returns a object representation of our Food
         food = get_object_or_404(Food, pk=pk)
         # Check the food's owner against the user making this request
-        if request.user != food.owner:
-            raise PermissionDenied('Unauthorized, you do not own this food')
+        # if request.user != food.owner:
+        #     raise PermissionDenied('Unauthorized, you do not own this food')
 
         # Ensure the owner field is set to the current user's ID
         request.data['food']['owner'] = request.user.id
