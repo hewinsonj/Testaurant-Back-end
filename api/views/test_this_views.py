@@ -32,7 +32,7 @@ class Test_thiss(generics.ListCreateAPIView):
 
         # print(temp_question_arr, 'This is the temp q arr')
         # request.data['test_this']['question_new'] = []
-        test_this = Test_thisSerializer(data=request.data['test_this'])
+        test_this = Test_thisSerializer(data=request.data['test_this'], partial=True)
         # print(test_this, 'This is after the serializer')
         # If the test_this data is valid according to our serializer...
         if test_this.is_valid():

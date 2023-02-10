@@ -48,6 +48,12 @@ else:
 # or production environment
 DATABASES = {
     'default': DB
+    # {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'django-relationships',
+    #     'USER': 'justinhewinson',
+    #     'PASSWORD': 'pop'
+    # }
 }
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
