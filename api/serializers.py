@@ -1,29 +1,13 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from .models.mango import Mango
-from .models.question import Question
+
 from .models.question_new import Question_new
 from .models.user import User
 from .models.food import Food
 from .models.drink import Drink
-from .models.test import Test
-from .models.quiz import Quiz
 from .models.result import Result
-from .models.quiz_test import Quiz_test
-from .models.test_many import Test_many
-from .models.test_test import Test_test
 from .models.test_this import Test_this
-
-class MangoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Mango
-        fields = ('id', 'name', 'color', 'ripe', 'owner')
-
-class QuestionSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = '__all__'
-        model = Question
 
 class Question_newSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,30 +18,6 @@ class FoodSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Food
-
-class TestSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
-    class Meta:
-        model = Test
-        fields = ["__all__"]
-    def create(self, validated_data):
-        questions_data = validated_data.pop('questions')
-        test = Test.objects.create(**validated_data)
-        for question_data in questions_data:
-            Question.objects.create(test=test, **question_data)
-        return test
-
-class QuizSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
-    class Meta:
-        model = Quiz
-        fields = ["__all__"]
-    def create(self, validated_data):
-        questions_data = validated_data.pop('questions')
-        quiz = Quiz.objects.create(**validated_data)
-        for question_data in questions_data:
-            Question.objects.create(quiz=quiz, **question_data)
-        return quiz
     
 class Test_thisSerializer(serializers.ModelSerializer):
     question_new = Question_newSerializer(many=True, read_only=True
@@ -71,22 +31,7 @@ class Test_thisSerializer(serializers.ModelSerializer):
         # for question_new_data in question_new_data:
         #     Question_new.objects.create(test_this=test_this, **question_new_data)
         return test_this
-
-# class Test_this_create_Serializer(serializers.ModelSerializer):
-#     question_new = Question_newSerializer(many=True)
-#     class Meta:
-#         model = Test_this
-#         fields = ('name', 'owner', 'question_new', 'created_at', 'updated_at', 'id') 
-#         extra_kwargs = {'question_new': {'required': False}}
-#     def create(self, validated_data):
-#         question_news_data = validated_data.pop('question_new')
-#         test_this = Test_this.objects.create(**validated_data)
-#         for question_new_data in question_news_data:
-#             Question_new.objects.create(test_this=test_this, **question_new_data)
-#         return test_this
-
    
-
 class ResultSerializer(serializers.ModelSerializer):
     the_test = Test_thisSerializer#(null=True)
     class Meta:
@@ -99,42 +44,6 @@ class ResultSerializer(serializers.ModelSerializer):
         # for the_test_data in the_tests_data:
         #     Test_this.objects.create(result=result, **the_test_data)
         return result
-
-class Quiz_testSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
-    class Meta:
-        model = Quiz_test
-        fields = ["__all__"]
-    def create(self, validated_data):
-        questions_data = validated_data.pop('questions')
-        quiz_test = Quiz_test.objects.create(**validated_data)
-        for question_data in questions_data:
-            Question.objects.create(quiz_test=quiz_test, **question_data)
-        return quiz_test
-
-class Test_manySerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
-    class Meta:
-        model = Test_many
-        fields = ["__all__"]
-    def create(self, validated_data):
-        questions_data = validated_data.pop('questions')
-        test_many = Test_many.objects.create(**validated_data)
-        for question_data in questions_data:
-            Question.objects.create(test_many=test_many, **question_data)
-        return test_many
-
-class Test_testSerializer(serializers.ModelSerializer):
-    questions = QuestionSerializer(many=True)
-    class Meta:
-        model = Test_test
-        fields = ["__all__"]
-    def create(self, validated_data):
-        questions_data = validated_data.pop('questions')
-        test_test = Test_test.objects.create(**validated_data)
-        for question_data in questions_data:
-            Question.objects.create(test_test=test_test, **question_data)
-        return test_test
 
 class DrinkSerializer(serializers.ModelSerializer):
     class Meta:
