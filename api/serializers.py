@@ -20,8 +20,7 @@ class FoodSerializer(serializers.ModelSerializer):
         model = Food
     
 class Test_thisSerializer(serializers.ModelSerializer):
-    question_new = Question_newSerializer(many=True, read_only=True
-    )
+    question_new = Question_newSerializer(many=True, read_only=True)
     class Meta:
         model = Test_this
         fields = ('name', 'question_new', 'owner', 'created_at', 'updated_at', 'id')
@@ -31,6 +30,21 @@ class Test_thisSerializer(serializers.ModelSerializer):
         # for question_new_data in question_new_data:
         #     Question_new.objects.create(test_this=test_this, **question_new_data)
         return test_this
+
+class Test_thisReadSerializer(serializers.ModelSerializer):
+    question_new = serializers.StringRelatedField(many=True)
+    class Meta:
+        fields = '__all__'
+        model = Test_this
+
+class Test_thisGetSerializer(serializers.ModelSerializer):
+    question_new = Question_newSerializer(many=True)
+    class Meta:
+        fields = '__all__'
+        model = Test_this
+
+
+
    
 class ResultSerializer(serializers.ModelSerializer):
     the_test = Test_thisSerializer#(null=True)
