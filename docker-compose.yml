@@ -12,7 +12,7 @@ services:
     volumes:
       - ./settings.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
       - db:/var/lib/postgresql/data
-  testaurant_app:
+  testaurant_api:
     build: .
     working_dir: /app
     restart: always
@@ -24,11 +24,13 @@ services:
       DB_HOST: testaurant_db
       DB_PASSWORD: postgres
       DB_USER: postgres
+    volumes:
+      - ./:/app
     ports:
       - "8000:8000"
     depends_on:
       - testaurant_db
-    container_name: testaurant_app
+    container_name: testaurant_api
     command: ["./docker/start.sh"]
 volumes:
   db:
