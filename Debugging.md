@@ -34,3 +34,17 @@ docker-compose up
 * `docker exec -it testaurant_api /bin/bash` : Access the `testaurant_api` container
 * `docker-compose restart testaurant-api` : Restart the `testaurant-api` container
 
+## Installing Prettier
+
+* follow official [prettier instructions](https://prettier.io/docs/en/install.html)
+* inside the front end repo, run
+  ```shell
+  npm install --save-dev --save-exact prettier
+  ```
+* then create your config file for prettier (lookup recommended config/settings, tweak to however you like!)
+  ```shell
+  echo {}> .prettierrc.json
+  ```
+
+  *_NOTE:_* (might have to rename to `.prettierrc` instead of the json file dpeending on your editor config)
+* finally make a `.prettierignore` file and put in the recommended ignored files
