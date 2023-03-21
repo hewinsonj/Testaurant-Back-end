@@ -26,6 +26,9 @@ if os.getenv('ENV') == 'development':
   DB = {
       'ENGINE': 'django.db.backends.postgresql',
       'NAME': DB_NAME,
+      'HOST': os.getenv('DB_HOST'),
+      'USER': os.getenv('DB_USER'),
+      'PASSWORD': os.getenv('DB_PASSWORD')
   }
   # Set debug to true
   DEBUG = True

@@ -1,0 +1,35 @@
+version: '3'
+services:
+  testaurant_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: testaurant_app
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./settings.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
+      - db:/var/lib/postgresql/data
+  testaurant_app:
+    build: .
+    working_dir: /app
+    restart: always
+    tty: true
+    environment:
+      SECRET: TEST_SECRET_KEY
+      ENV: development
+      DB_NAME: testaurant_app
+      DB_HOST: testaurant_db
+      DB_PASSWORD: postgres
+      DB_USER: postgres
+    ports:
+      - "8000:8000"
+    depends_on:
+      - testaurant_db
+    container_name: testaurant_app
+    command: ["./docker/start.sh"]
+volumes:
+  db:
+    driver: local
