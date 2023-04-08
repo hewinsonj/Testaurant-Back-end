@@ -21,14 +21,15 @@ class Test_thiss(generics.ListCreateAPIView):
         # test_thiss = Test_this.objects
         # Run the data through the serializer
         data = Test_thisGetSerializer(test_thiss, many=True).data
+        # print(data, 'this is the dang request from get')
         return Response({ 'test_thiss': data })
 
     def post(self, request):
-        print(request.data, 'this it the dang request')
+        print(request.data, 'this is the dang request from post')
         """Create request"""
         request.data['test_this']['owner'] = request.user.id
         test_this = Test_thisSerializer(data=request.data['test_this'], partial=True)
-        test_this.question_new.add(Question_new)
+        # test_this.question_new.add(Question_new)
         if test_this.is_valid():
             test_this.save()
             return Response( test_this.data , status=status.HTTP_201_CREATED)
@@ -38,6 +39,7 @@ class Test_thiss(generics.ListCreateAPIView):
 class Test_thisDetail(generics.RetrieveUpdateDestroyAPIView):
     # permission_classes=(IsAuthenticated,)
     def get(self, request, pk):
+        
         """Show request"""
         # Locate the test_this to show
         test_this = get_object_or_404(Test_this, pk=pk)
@@ -47,6 +49,7 @@ class Test_thisDetail(generics.RetrieveUpdateDestroyAPIView):
 
         # Run the data through the serializer so it's formatted
         data = Test_thisReadSerializer(test_this).data
+        print(data, 'this is the dang request from get')
         return Response({ 'test_this': data })
 
     def delete(self, request, pk):
