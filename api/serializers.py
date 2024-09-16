@@ -19,16 +19,39 @@ class FoodSerializer(serializers.ModelSerializer):
         fields = '__all__'
         model = Food
     
+# class Test_thisSerializer(serializers.ModelSerializer):
+#     question_new = Question_newSerializer(many=True, read_only=True)
+#     class Meta:
+#         model = Test_this
+#         fields = ('name', 'question_new', 'owner', 'created_at', 'updated_at', 'id')
+#     def create(self, validated_data):
+#         # question_new_data = validated_data.pop('question_new')
+#         test_this = Test_this.objects.create(**validated_data)
+#         # for question_new_data in question_new_data:
+#         #     Question_new.objects.create(test_this=test_this, **question_new_data)
+#         return test_this
+
 class Test_thisSerializer(serializers.ModelSerializer):
-    question_new = Question_newSerializer(many=True, read_only=True)
+    # Allow the frontend to send a list of `question_new` IDs
+    question_new = serializers.PrimaryKeyRelatedField(
+        queryset=Question_new.objects.all(),
+        many=True
+    )
+
     class Meta:
         model = Test_this
         fields = ('name', 'question_new', 'owner', 'created_at', 'updated_at', 'id')
+
     def create(self, validated_data):
-        # question_new_data = validated_data.pop('question_new')
+        # Extract `question_new` data (list of IDs)
+        question_new_data = validated_data.pop('question_new', [])
+        
+        # Create the `Test_this` object
         test_this = Test_this.objects.create(**validated_data)
-        # for question_new_data in question_new_data:
-        #     Question_new.objects.create(test_this=test_this, **question_new_data)
+        
+        # Assign the many-to-many relationship
+        test_this.question_new.set(question_new_data)
+        
         return test_this
 
 class Test_thisReadSerializer(serializers.ModelSerializer):

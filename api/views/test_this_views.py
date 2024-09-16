@@ -25,7 +25,7 @@ class Test_thiss(generics.ListCreateAPIView):
         return Response({ 'test_thiss': data })
 
     def post(self, request):
-        print(request.data, 'this is the dang request from post')
+        print(request.data, 'this is the dang request from post omg')
         """Create request"""
         request.data['test_this']['owner'] = request.user.id
         test_this = Test_thisSerializer(data=request.data['test_this'], partial=True)

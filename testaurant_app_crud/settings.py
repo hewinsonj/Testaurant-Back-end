@@ -14,7 +14,7 @@ import os
 import sys
 import dj_database_url
 
-# .env config:
+# # .env config:
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
@@ -50,9 +50,9 @@ DATABASES = {
     'default': DB
     # {
     #     'ENGINE': 'django.db.backends.postgresql',
-    #     'NAME': 'django-relationships',
-    #     'USER': 'justinhewinson',
-    #     'PASSWORD': 'pop'
+    #     'NAME': DB_NAME,
+    #     # 'USER': 'justinhewinson',
+    #     # 'PASSWORD': 'pop'
     # }
 }
 
