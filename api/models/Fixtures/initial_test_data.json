@@ -1,6 +1,6 @@
 [
   {
-    "model": "auth.user",
+    "model": "api.user",
     "pk": 6,
     "fields": {
       "password": "pbkdf2_sha256$390000$G7gezfjnXwW23XjnuoRTnU$kdVO9clDnIDjCrlbVnjBfHhRXehaKdKM8ZZ8bFx7Rmg=",
@@ -10,9 +10,8 @@
       "email": "moodyBoy@gmail.com"
     }
   },
-  [
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 1,
       "fields": {
         "question_str": "What is the name of the potion that grants luck for a day?",
@@ -25,7 +24,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 2,
       "fields": {
         "question_str": "Who was the master of the Elder Wand before Dumbledore?",
@@ -38,7 +37,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 3,
       "fields": {
         "question_str": "What is the incantation for the Shield Charm?",
@@ -51,7 +50,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 4,
       "fields": {
         "question_str": "What is the name of Hagrid's giant half-brother?",
@@ -64,7 +63,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 5,
       "fields": {
         "question_str": "What is the core of Harry Potter’s wand?",
@@ -77,7 +76,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 6,
       "fields": {
         "question_str": "What is Hermione’s middle name?",
@@ -90,7 +89,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 7,
       "fields": {
         "question_str": "What does the spell ‘Obliviate’ do?",
@@ -103,7 +102,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 8,
       "fields": {
         "question_str": "Who killed Bellatrix Lestrange?",
@@ -116,7 +115,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 9,
       "fields": {
         "question_str": "What is the name of Voldemort’s mother?",
@@ -129,7 +128,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 10,
       "fields": {
         "question_str": "What is the name of the charm that calls objects to you?",
@@ -142,7 +141,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 11,
       "fields": {
         "question_str": "Who was the Half-Blood Prince?",
@@ -155,7 +154,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 12,
       "fields": {
         "question_str": "What kind of creature is a Thestral?",
@@ -168,7 +167,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 13,
       "fields": {
         "question_str": "What is the address of the Dursleys' house?",
@@ -181,7 +180,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 14,
       "fields": {
         "question_str": "Which Hogwarts house did Moaning Myrtle belong to?",
@@ -194,7 +193,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 15,
       "fields": {
         "question_str": "What is the name of the house-elf that serves the Malfoy family?",
@@ -207,7 +206,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 16,
       "fields": {
         "question_str": "Who posed as Mad-Eye Moody in 'The Goblet of Fire'?",
@@ -220,7 +219,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 17,
       "fields": {
         "question_str": "What plant does Professor Sprout use to cure petrified students?",
@@ -233,7 +232,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 18,
       "fields": {
         "question_str": "What did Hermione steal from Snape's storeroom to brew Polyjuice Potion?",
@@ -246,7 +245,7 @@
       }
     },
     {
-      "model": "testaurant_app.question_new",
+      "model": "api.question_new",
       "pk": 19,
       "fields": {
         "question_str": "What magical object shows the deepest desires of one's heart?",
@@ -259,19 +258,19 @@
       }
     },
     {
-      "model": "testaurant_app.test_this",
+      "model": "api.test_this",
       "pk": 1,
       "fields": {
         "name": "Harry Potter 1",
         "question_new": [1, 2, 3, 4, 5, 6, 7, 8, 9],
         "owner": 1,
-        "created_at": "2024-10-01T12:00:00Z",
-        "updated_at": "2024-10-01T12:00:00Z"
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
 
     {
-      "model": "testaurant_app.test_this",
+      "model": "api.test_this",
       "pk": 2,
       "fields": {
         "name": "Harry Potter 2",
@@ -282,7 +281,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 1,
       "fields": {
         "name": "Treacle Tart",
@@ -300,7 +299,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 2,
       "fields": {
         "name": "Pumpkin Pasties",
@@ -318,7 +317,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 3,
       "fields": {
         "name": "Chocolate Frogs",
@@ -336,7 +335,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 4,
       "fields": {
         "name": "Cauldron Cakes",
@@ -354,7 +353,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 5,
       "fields": {
         "name": "Butterbeer Ice Cream",
@@ -372,7 +371,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 6,
       "fields": {
         "name": "Hagrid’s Rock Cakes",
@@ -390,7 +389,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 7,
       "fields": {
         "name": "Beef and Kidney Pie",
@@ -408,7 +407,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 8,
       "fields": {
         "name": "Molly Weasley's Meat Pies",
@@ -426,7 +425,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 9,
       "fields": {
         "name": "Golden Snitch Cake Pops",
@@ -444,7 +443,7 @@
       }
     },
     {
-      "model": "testaurant_app.food",
+      "model": "api.food",
       "pk": 10,
       "fields": {
         "name": "Fizzing Whizzbees",
@@ -462,7 +461,7 @@
       }
     },
     {
-      "model": "testaurant_app.drink",
+      "model": "api.drink",
       "pk": 1,
       "fields": {
         "name": "Butterbeer",
@@ -483,7 +482,7 @@
       }
     },
     {
-      "model": "testaurant_app.drink",
+      "model": "api.drink",
       "pk": 2,
       "fields": {
         "name": "Pumpkin Juice",
@@ -504,7 +503,7 @@
       }
     },
     {
-      "model": "testaurant_app.drink",
+      "model": "api.drink",
       "pk": 3,
       "fields": {
         "name": "Gillywater",
@@ -525,7 +524,7 @@
       }
     },
     {
-      "model": "testaurant_app.drink",
+      "model": "api.drink",
       "pk": 4,
       "fields": {
         "name": "Firewhisky",
@@ -544,9 +543,9 @@
         "con_gluten": false,
         "owner": 1
       }
-    }
+    },
     {
-        "model": "testaurant_app.drink",
+        "model": "api.drink",
         "pk": 5,
         "fields": {
           "name": "Polyjuice Potion",
@@ -567,7 +566,7 @@
         }
       },
       {
-        "model": "testaurant_app.drink",
+        "model": "api.drink",
         "pk": 6,
         "fields": {
           "name": "Felix Felicis",
@@ -587,5 +586,5 @@
           "owner": 1
         }
       }
-  ]
+  
 ]
