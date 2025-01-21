@@ -1,0 +1,591 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$390000$G7gezfjnXwW23XjnuoRTnU$kdVO9clDnIDjCrlbVnjBfHhRXehaKdKM8ZZ8bFx7Rmg=",
+      "is_superuser": true,
+      "is_staff": true,
+      "is_active": true,
+      "email": "moodyBoy@gmail.com"
+    }
+  },
+  [
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 1,
+      "fields": {
+        "question_str": "What is the name of the potion that grants luck for a day?",
+        "option1": "Polyjuice Potion",
+        "option2": "Amortentia",
+        "option3": "Felix Felicis",
+        "option4": "Veritaserum",
+        "answer": "Felix Felicis",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 2,
+      "fields": {
+        "question_str": "Who was the master of the Elder Wand before Dumbledore?",
+        "option1": "Grindelwald",
+        "option2": "Voldemort",
+        "option3": "Snape",
+        "option4": "Draco Malfoy",
+        "answer": "Grindelwald",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 3,
+      "fields": {
+        "question_str": "What is the incantation for the Shield Charm?",
+        "option1": "Expelliarmus",
+        "option2": "Protego",
+        "option3": "Lumos",
+        "option4": "Stupefy",
+        "answer": "Protego",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 4,
+      "fields": {
+        "question_str": "What is the name of Hagrid's giant half-brother?",
+        "option1": "Grawp",
+        "option2": "Aragog",
+        "option3": "Norbert",
+        "option4": "Buckbeak",
+        "answer": "Grawp",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 5,
+      "fields": {
+        "question_str": "What is the core of Harry Potter’s wand?",
+        "option1": "Dragon heartstring",
+        "option2": "Phoenix feather",
+        "option3": "Unicorn hair",
+        "option4": "Thestral hair",
+        "answer": "Phoenix feather",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 6,
+      "fields": {
+        "question_str": "What is Hermione’s middle name?",
+        "option1": "Jean",
+        "option2": "Jane",
+        "option3": "Rose",
+        "option4": "Marie",
+        "answer": "Jean",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 7,
+      "fields": {
+        "question_str": "What does the spell ‘Obliviate’ do?",
+        "option1": "Unlocks doors",
+        "option2": "Confuses an opponent",
+        "option3": "Wipes memories",
+        "option4": "Reveals secrets",
+        "answer": "Wipes memories",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 8,
+      "fields": {
+        "question_str": "Who killed Bellatrix Lestrange?",
+        "option1": "Harry Potter",
+        "option2": "Molly Weasley",
+        "option3": "Sirius Black",
+        "option4": "Neville Longbottom",
+        "answer": "Molly Weasley",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 9,
+      "fields": {
+        "question_str": "What is the name of Voldemort’s mother?",
+        "option1": "Merope Gaunt",
+        "option2": "Bellatrix Lestrange",
+        "option3": "Narcissa Malfoy",
+        "option4": "Walburga Black",
+        "answer": "Merope Gaunt",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 10,
+      "fields": {
+        "question_str": "What is the name of the charm that calls objects to you?",
+        "option1": "Accio",
+        "option2": "Expelliarmus",
+        "option3": "Alohomora",
+        "option4": "Lumos",
+        "answer": "Accio",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 11,
+      "fields": {
+        "question_str": "Who was the Half-Blood Prince?",
+        "option1": "Harry Potter",
+        "option2": "Severus Snape",
+        "option3": "Tom Riddle",
+        "option4": "Albus Dumbledore",
+        "answer": "Severus Snape",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 12,
+      "fields": {
+        "question_str": "What kind of creature is a Thestral?",
+        "option1": "Magical reptile",
+        "option2": "Magical horse",
+        "option3": "Magical bird",
+        "option4": "Magical insect",
+        "answer": "Magical horse",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 13,
+      "fields": {
+        "question_str": "What is the address of the Dursleys' house?",
+        "option1": "12 Grimmauld Place",
+        "option2": "4 Privet Drive",
+        "option3": "Shell Cottage",
+        "option4": "The Burrow",
+        "answer": "4 Privet Drive",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 14,
+      "fields": {
+        "question_str": "Which Hogwarts house did Moaning Myrtle belong to?",
+        "option1": "Hufflepuff",
+        "option2": "Ravenclaw",
+        "option3": "Gryffindor",
+        "option4": "Slytherin",
+        "answer": "Ravenclaw",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 15,
+      "fields": {
+        "question_str": "What is the name of the house-elf that serves the Malfoy family?",
+        "option1": "Kreacher",
+        "option2": "Winky",
+        "option3": "Dobby",
+        "option4": "Hokey",
+        "answer": "Dobby",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 16,
+      "fields": {
+        "question_str": "Who posed as Mad-Eye Moody in 'The Goblet of Fire'?",
+        "option1": "Barty Crouch Jr.",
+        "option2": "Lucius Malfoy",
+        "option3": "Peter Pettigrew",
+        "option4": "Igor Karkaroff",
+        "answer": "Barty Crouch Jr.",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 17,
+      "fields": {
+        "question_str": "What plant does Professor Sprout use to cure petrified students?",
+        "option1": "Gillyweed",
+        "option2": "Mandrake",
+        "option3": "Devil’s Snare",
+        "option4": "Fluxweed",
+        "answer": "Mandrake",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 18,
+      "fields": {
+        "question_str": "What did Hermione steal from Snape's storeroom to brew Polyjuice Potion?",
+        "option1": "Fluxweed",
+        "option2": "Boomslang skin",
+        "option3": "Bezoar",
+        "option4": "Gillyweed",
+        "answer": "Boomslang skin",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.question_new",
+      "pk": 19,
+      "fields": {
+        "question_str": "What magical object shows the deepest desires of one's heart?",
+        "option1": "The Mirror of Erised",
+        "option2": "The Pensieve",
+        "option3": "The Resurrection Stone",
+        "option4": "The Philosopher's Stone",
+        "answer": "The Mirror of Erised",
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.test_this",
+      "pk": 1,
+      "fields": {
+        "name": "Harry Potter 1",
+        "question_new": [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "owner": 1,
+        "created_at": "2024-10-01T12:00:00Z",
+        "updated_at": "2024-10-01T12:00:00Z"
+      }
+    },
+
+    {
+      "model": "testaurant_app.test_this",
+      "pk": 2,
+      "fields": {
+        "name": "Harry Potter 2",
+        "question_new": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
+        "owner": 1,
+        "created_at": "2024-10-01T12:00:00Z",
+        "updated_at": "2024-10-01T12:00:00Z"
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 1,
+      "fields": {
+        "name": "Treacle Tart",
+        "ingredients": "Shortcrust pastry, Golden syrup, Breadcrumbs, Lemon juice",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": true,
+        "con_sesame": false,
+        "con_gluten": true,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 2,
+      "fields": {
+        "name": "Pumpkin Pasties",
+        "ingredients": "Pumpkin, Nutmeg, Cinnamon, Shortcrust pastry",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": true,
+        "con_sesame": false,
+        "con_gluten": true,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 3,
+      "fields": {
+        "name": "Chocolate Frogs",
+        "ingredients": "Chocolate, Sugar, Gelatin",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": true,
+        "con_fish": false,
+        "con_wheat": false,
+        "con_sesame": false,
+        "con_gluten": false,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 4,
+      "fields": {
+        "name": "Cauldron Cakes",
+        "ingredients": "Flour, Cocoa powder, Sugar, Eggs",
+        "con_egg": true,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": true,
+        "con_sesame": false,
+        "con_gluten": true,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 5,
+      "fields": {
+        "name": "Butterbeer Ice Cream",
+        "ingredients": "Butter, Sugar, Cream, Vanilla extract, Butterscotch syrup",
+        "con_egg": true,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": false,
+        "con_sesame": false,
+        "con_gluten": false,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 6,
+      "fields": {
+        "name": "Hagrid’s Rock Cakes",
+        "ingredients": "Flour, Eggs, Raisins, Butter",
+        "con_egg": true,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": true,
+        "con_sesame": false,
+        "con_gluten": true,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 7,
+      "fields": {
+        "name": "Beef and Kidney Pie",
+        "ingredients": "Beef, Kidney, Onions, Shortcrust pastry",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": true,
+        "con_sesame": false,
+        "con_gluten": true,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 8,
+      "fields": {
+        "name": "Molly Weasley's Meat Pies",
+        "ingredients": "Ground beef, Onions, Carrots, Shortcrust pastry",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": true,
+        "con_sesame": false,
+        "con_gluten": true,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 9,
+      "fields": {
+        "name": "Golden Snitch Cake Pops",
+        "ingredients": "Cake mix, Icing, Edible gold glitter",
+        "con_egg": true,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": true,
+        "con_sesame": false,
+        "con_gluten": true,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.food",
+      "pk": 10,
+      "fields": {
+        "name": "Fizzing Whizzbees",
+        "ingredients": "Honeycomb, Chocolate, Popping candy",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": true,
+        "con_fish": false,
+        "con_wheat": false,
+        "con_sesame": false,
+        "con_gluten": false,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.drink",
+      "pk": 1,
+      "fields": {
+        "name": "Butterbeer",
+        "ingredients": "Butterscotch syrup, Cream soda, Whipped cream",
+        "garnishes": "Whipped cream",
+        "prep_instructs": "Mix butterscotch and cream soda, top with whipped cream",
+        "glassware": "Mug",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": false,
+        "con_sesame": false,
+        "con_gluten": false,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.drink",
+      "pk": 2,
+      "fields": {
+        "name": "Pumpkin Juice",
+        "ingredients": "Pumpkin puree, Apple juice, Cinnamon, Nutmeg",
+        "garnishes": "Cinnamon stick",
+        "prep_instructs": "Mix pumpkin puree and apple juice, add cinnamon and nutmeg",
+        "glassware": "Goblet",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": false,
+        "con_sesame": false,
+        "con_gluten": false,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.drink",
+      "pk": 3,
+      "fields": {
+        "name": "Gillywater",
+        "ingredients": "Water, Cucumber slices",
+        "garnishes": "Cucumber slice",
+        "prep_instructs": "Chill water and add cucumber slices",
+        "glassware": "Tumbler",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": false,
+        "con_sesame": false,
+        "con_gluten": false,
+        "owner": 1
+      }
+    },
+    {
+      "model": "testaurant_app.drink",
+      "pk": 4,
+      "fields": {
+        "name": "Firewhisky",
+        "ingredients": "Whiskey, Cinnamon, Sugar",
+        "garnishes": "Cinnamon stick",
+        "prep_instructs": "Mix whiskey with cinnamon and sugar, serve warm",
+        "glassware": "Shot glass",
+        "con_egg": false,
+        "con_tree_nut": false,
+        "con_peanut": false,
+        "con_shellfish": false,
+        "con_soy": false,
+        "con_fish": false,
+        "con_wheat": false,
+        "con_sesame": false,
+        "con_gluten": false,
+        "owner": 1
+      }
+    }
+    {
+        "model": "testaurant_app.drink",
+        "pk": 5,
+        "fields": {
+          "name": "Polyjuice Potion",
+          "ingredients": "Green apple juice, Kiwi syrup, Sparkling water",
+          "garnishes": "Mint leaf",
+          "prep_instructs": "Mix green apple juice and kiwi syrup, top with sparkling water, garnish with mint",
+          "glassware": "Potion bottle",
+          "con_egg": false,
+          "con_tree_nut": false,
+          "con_peanut": false,
+          "con_shellfish": false,
+          "con_soy": false,
+          "con_fish": false,
+          "con_wheat": false,
+          "con_sesame": false,
+          "con_gluten": false,
+          "owner": 1
+        }
+      },
+      {
+        "model": "testaurant_app.drink",
+        "pk": 6,
+        "fields": {
+          "name": "Felix Felicis",
+          "ingredients": "Lemonade, Ginger syrup, Edible gold glitter",
+          "garnishes": "Lemon twist",
+          "prep_instructs": "Mix lemonade and ginger syrup, stir in edible gold glitter, garnish with lemon twist",
+          "glassware": "Goblet",
+          "con_egg": false,
+          "con_tree_nut": false,
+          "con_peanut": false,
+          "con_shellfish": false,
+          "con_soy": false,
+          "con_fish": false,
+          "con_wheat": false,
+          "con_sesame": false,
+          "con_gluten": false,
+          "owner": 1
+        }
+      }
+  ]
+]
