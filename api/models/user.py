@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.conf import settings
 from rest_framework.authtoken.models import Token
+# from api.models.test_this import Test_this 
 
 class UserManager(BaseUserManager):
     """Manager for user profiles"""
@@ -59,9 +60,20 @@ class User(AbstractBaseUser, PermissionsMixin):
     # As with any Django models, we need to define the fields
     # for the model with the type and options:
     email = models.EmailField(max_length=255, unique=True)
+
+        # Optional fields
+    first_name = models.CharField(max_length=100, blank=True, null=True)
+    last_name = models.CharField(max_length=100, blank=True, null=True)
+    role = models.CharField(max_length=100, blank=True, null=True)
+    hire_date = models.DateField(blank=True, null=True)
     # name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    assigned_tests = models.ManyToManyField(
+    'api.Test_this',  # 👈 use string instead of direct import
+    blank=True,
+    related_name="assigned_users"
+)
 
     # Any time we call User.objects (such as in objects.all() or objects.filter())
     # make sure to use the custom user manager we created.

@@ -4,7 +4,7 @@ from .views.question_new_views import Question_news, Question_newDetail
 from .views.test_this_views import Test_thiss, Test_thisDetail
 from .views.result_views import Results, ResultDetail
 from .views.drink_views import Drinks, DrinkDetail
-from .views.user_views import SignUp, SignIn, SignOut, ChangePassword, Users
+from .views.user_views import SignUp, SignIn, SignOut, ChangePassword, Users,UserDetail
 
 
 urlpatterns = [
@@ -23,5 +23,6 @@ urlpatterns = [
     path('sign-in/', SignIn.as_view(), name='sign-in'),
     path('sign-out/', SignOut.as_view(), name='sign-out'),
     path('change-pw/', ChangePassword.as_view(), name='change-pw'),
-    path('employees/', Users.as_view(), name='users')
+    path('employees/', Users.as_view(), name='users'),
+    path('users/<int:pk>/', UserDetail.as_view(), name='users-detail'),
 ]

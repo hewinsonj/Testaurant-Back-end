@@ -6,12 +6,12 @@ from .test_this import Test_this
 class Result(models.Model):
   # define fields
   # https://docs.djangoproject.com/en/3.0/ref/models/fields/
-    score = models.CharField(max_length=10)
+    score = models.CharField(max_length=20)
     correct = models.CharField(max_length=10)
     wrong = models.CharField(max_length=10)
     total = models.CharField(max_length=10)
     percent = models.CharField(max_length=10)
-    time = models.CharField(max_length=10)
+    time = models.CharField(max_length=20)
     the_test = models.ForeignKey(
         Test_this,
         on_delete=models.CASCADE,

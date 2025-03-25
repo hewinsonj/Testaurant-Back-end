@@ -109,3 +109,8 @@ class Users(generics.ListCreateAPIView):
         # Run the data through the serializer
         data = UserSerializer(users, many=True).data
         return Response({ 'users': data })
+    
+class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
+    queryset = User.objects.all()

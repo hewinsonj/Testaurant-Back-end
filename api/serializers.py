@@ -69,36 +69,71 @@ class Test_thisGetSerializer(serializers.ModelSerializer):
 
 
    
+# class ResultSerializer(serializers.ModelSerializer):
+    # the_test = Test_thisSerializer()#(null=True)
+    # class Meta:
+    #     model = Result
+    #     fields = ["the_test", "owner", "id", "score", "correct", "wrong", "percent", "total", "time", "created_at", "updated_at"]
+       
+    # def create(self, validated_data):
+    #     # the_tests_data = validated_data.pop('the_test')
+    #     result = Result.objects.create(**validated_data)
+    #     # for the_test_data in the_tests_data:
+    #     #     Test_this.objects.create(result=result, **the_test_data)
+    #     return result
 class ResultSerializer(serializers.ModelSerializer):
-    the_test = Test_thisSerializer#(null=True)
+    the_test = serializers.PrimaryKeyRelatedField(queryset=Test_this.objects.all())
+
     class Meta:
         model = Result
-        fields = ["the_test", "owner", "id", "score", "correct", "wrong", "percent", "total", "time", "created_at", "updated_at"]
-       
+        fields = [
+            "the_test", "owner", "id", "score", "correct", "wrong",
+            "percent", "total", "time", "created_at", "updated_at"
+        ]
+
     def create(self, validated_data):
-        # the_tests_data = validated_data.pop('the_test')
-        result = Result.objects.create(**validated_data)
-        # for the_test_data in the_tests_data:
-        #     Test_this.objects.create(result=result, **the_test_data)
-        return result
+        return Result.objects.create(**validated_data)
+
 
 class DrinkSerializer(serializers.ModelSerializer):
     class Meta:
         fields = '__all__'
         model = Drink
 
-class UserSerializer(serializers.ModelSerializer):
-    # This model serializer will be used for User creation
-    # The login serializer also inherits from this serializer
-    # in order to require certain data for login
-    class Meta:
-        # get_user_model will get the user model (this is required)
-        # https://docs.djangoproject.com/en/3.0/topics/auth/customizing/#referencing-the-user-model
-        model = get_user_model()
-        fields = ('id', 'email', 'password')
-        extra_kwargs = { 'password': { 'write_only': True, 'min_length': 5 } }
+# class UserSerializer(serializers.ModelSerializer):
+#     # This model serializer will be used for User creation
+#     # The login serializer also inherits from this serializer
+#     # in order to require certain data for login
+#     class Meta:
+#         # get_user_model will get the user model (this is required)
+#         # https://docs.djangoproject.com/en/3.0/topics/auth/customizing/#referencing-the-user-model
+#         model = get_user_model()
+#         fields = ('id', 'email', 'password')
+#         extra_kwargs = { 'password': { 'write_only': True, 'min_length': 5 } }
 
-    # This create method will be used for model creation
+#     # This create method will be used for model creation
+#     def create(self, validated_data):
+#         return get_user_model().objects.create_user(**validated_data)
+
+class UserSerializer(serializers.ModelSerializer):
+    assigned_tests = serializers.PrimaryKeyRelatedField(
+        many=True,
+        queryset=Test_this.objects.all(),
+        required=False
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = (
+            'id', 'email', 'password',
+            'first_name', 'last_name',
+            'role', 'hire_date',
+            'assigned_tests',
+        )
+        extra_kwargs = {
+            'password': {'write_only': True, 'min_length': 5}
+        }
+
     def create(self, validated_data):
         return get_user_model().objects.create_user(**validated_data)
 
