@@ -2,7 +2,7 @@ from django.urls import path
 from .views.food_views import Foods, FoodDetail
 from .views.question_new_views import Question_news, Question_newDetail
 from .views.test_this_views import Test_thiss, Test_thisDetail
-from .views.result_views import Results, ResultDetail
+from .views.result_views import Results, ResultDetail, MyResults
 from .views.drink_views import Drinks, DrinkDetail
 from .views.user_views import SignUp, SignIn, SignOut, ChangePassword, Users,UserDetail
 
@@ -25,4 +25,6 @@ urlpatterns = [
     path('change-pw/', ChangePassword.as_view(), name='change-pw'),
     path('employees/', Users.as_view(), name='users'),
     path('users/<int:pk>/', UserDetail.as_view(), name='users-detail'),
+    path('results/', Results.as_view(), name='results'),
+    path('results/mine/', MyResults.as_view(), name='my-results'),
 ]

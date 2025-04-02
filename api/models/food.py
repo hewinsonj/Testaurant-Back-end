@@ -16,6 +16,7 @@ class Food(models.Model):
   con_wheat = models.BooleanField()
   con_sesame = models.BooleanField()
   con_gluten = models.BooleanField()
+  con_dairy = models.BooleanField()
   owner = models.ForeignKey(
       get_user_model(),
       on_delete=models.CASCADE
@@ -23,7 +24,7 @@ class Food(models.Model):
 
   def __str__(self):
     # This must return a string
-    return f"The {self.name}'s ingredients are: {self.ingredients}. Contains egg: {self.con_egg}, Contains tree nuts: {self.con_tree_nut}, Contains peanut: {self.con_peanut}, Contains shellfish: {self.con_shellfish}, Contains soy: {self.con_soy}, Contains fish: {self.con_fish}, Contains wheat: {self.con_wheat}, Contains sesame: {self.con_sesame}, Contains gluten: {self.con_gluten}."
+    return f"The {self.name}'s ingredients are: {self.ingredients}. Contains egg: {self.con_egg}, Contains tree nuts: {self.con_tree_nut}, Contains peanut: {self.con_peanut}, Contains shellfish: {self.con_shellfish}, Contains soy: {self.con_soy}, Contains fish: {self.con_fish}, Contains wheat: {self.con_wheat}, Contains sesame: {self.con_sesame}, Contains gluten: {self.con_gluten}, Contains dairy: {self.con_dairy}."
 
   def as_dict(self):
     """Returns dictionary version of Food models"""
@@ -40,4 +41,5 @@ class Food(models.Model):
         'con_wheat': self.con_wheat,
         'con_sesame': self.con_sesame,
         'con_gluten': self.con_gluten,
+        'con_dairy': self.con_dairy,
     }

@@ -22,19 +22,16 @@ class Foods(generics.ListCreateAPIView):
         return Response({ 'foods': data })
 
     def post(self, request):
-        """Create request"""
-        # Add user to request data object
-        request.data['food']['owner'] = request.user.id
-        # Serialize/create food
-        food = FoodSerializer(data=request.data['food'])
-        # If the food data is valid according to our serializer...
-        if food.is_valid():
-            # Save the created food & send a response
-            food.save()
-            return Response({ 'food': food.data }, status=status.HTTP_201_CREATED)
-        # If the data is not valid, return a response with the errors
-        return Response(food.errors, status=status.HTTP_400_BAD_REQUEST)
+        print("🛠 Incoming food data:", request.data)  # optional debug
+        food_data = request.data.get('food')  # ✅ Unwrap it here
 
+        serializer = FoodSerializer(data=food_data)
+        if serializer.is_valid():
+            serializer.save(owner=request.user)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            print("❌ Food creation error:", serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class FoodDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
     def get(self, request, pk):

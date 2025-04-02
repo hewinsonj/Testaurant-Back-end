@@ -7,19 +7,49 @@ from django.shortcuts import get_object_or_404
 from ..models.result import Result
 from ..serializers import ResultSerializer
 
+
+
+# class Results(generics.ListCreateAPIView):
+#     permission_classes = (IsAuthenticated,)
+#     serializer_class = ResultSerializer
+
+#     def get(self, request):
+#         results = Result.objects.all()
+#         data = ResultSerializer(results, many=True).data
+#         return Response({'results': data})
+
+#     def post(self, request):
+#         request.data['result']['owner'] = request.user.id
+#         result = ResultSerializer(data=request.data['result'])
+#         if result.is_valid():
+#             result.save()
+#             return Response({'result': result.data}, status=status.HTTP_201_CREATED)
+#         return Response(result.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MyResults(generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ResultSerializer
+
+    def get(self, request):
+        results = Result.objects.filter(owner=request.user)
+        data = ResultSerializer(results, many=True).data
+        return Response({'results': data}, status=status.HTTP_200_OK)
+
+
+
 # Create your views here.
 class Results(generics.ListCreateAPIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = ResultSerializer
+
     def get(self, request):
-        """Index request"""
-        # Get all the results:
-        results = Result.objects.all()
-        # Filter the results by owner, so you can only see your owned results
-        # results = Result.objects.filter(owner=request.user.id)
-        # Run the data through the serializer
+        if getattr(request.user, 'role', None) == "manager":
+            results = Result.objects.all()
+        else:
+            results = Result.objects.filter(owner=request.user)
         data = ResultSerializer(results, many=True).data
-        return Response({ 'results': data })
+        return Response({'results': data}, status=status.HTTP_200_OK)
 
     def post(self, request):
         print(request.data)

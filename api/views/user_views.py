@@ -4,70 +4,60 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import status, generics
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user, authenticate, login, logout
+from rest_framework.authtoken.models import Token
+
 
 from ..serializers import UserSerializer, UserRegisterSerializer,  ChangePasswordSerializer
 from ..models.user import User
 
 class SignUp(generics.CreateAPIView):
-    # Override the authentication/permissions classes so this endpoint
-    # is not authenticated & we don't need any permissions to access it.
     authentication_classes = ()
     permission_classes = ()
-
-    # Serializer classes are required for endpoints that create data
     serializer_class = UserRegisterSerializer
 
     def post(self, request):
-        # Pass the request data to the serializer to validate it
-        user = UserRegisterSerializer(data=request.data)
-        # If that data is in the correct format...
-        if user.is_valid():
-            # Actually create the user using the UserSerializer (the `create` method defined there)
-            created_user = UserSerializer(data=user.data)
+        serializer = UserRegisterSerializer(data=request.data)
 
-            if created_user.is_valid():
-                # Save the user and send back a response!
-                created_user.save()
-                return Response({ 'user': created_user.data }, status=status.HTTP_201_CREATED)
-            else:
-                return Response(created_user.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+        if serializer.is_valid():
+            data = serializer.validated_data
+            data.pop('password_confirmation')
 
-class SignIn(generics.CreateAPIView):
-    # Override the authentication/permissions classes so this endpoint
-    # is not authenticated & we don't need any permissions to access it.
+            # Create the user
+            user = User.objects.create_user(**data)
+
+            # Create or retrieve token
+            token, _ = Token.objects.get_or_create(user=user)
+
+            # Serialize user and attach token to response
+            serialized_user = UserSerializer(user).data
+            serialized_user['token'] = token.key
+
+            return Response({'user': serialized_user}, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class SignIn(generics.GenericAPIView):
     authentication_classes = ()
     permission_classes = ()
 
-    # Serializer classes are required for endpoints that create data
-    serializer_class = UserSerializer
-
     def post(self, request):
         creds = request.data
-        print(creds)
-        # We can pass our email and password along with the request to the
-        # `authenticate` method. If we had used the default user, we would need
-        # to send the `username` instead of `email`.
-        user = authenticate(request, email=creds['email'], password=creds['password'])
-        # Is our user is successfully authenticated...
-        if user is not None:
-            # And they're active...
-            if user.is_active:
-                # Log them in!
-                login(request, user)
-                # Finally, return a response with the user's token
-                return Response({
-                    'user': {
-                        'id': user.id,
-                        'email': user.email,
-                        'token': user.get_auth_token()
-                    }
-                })
-            else:
-                return Response({ 'msg': 'The account is inactive.' }, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response({ 'msg': 'The username and/or password is incorrect.' }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        user = authenticate(request, email=creds.get('email'), password=creds.get('password'))
+
+        if user is not None and user.is_active:
+            login(request, user)
+            token, _ = Token.objects.get_or_create(user=user)
+            serialized_user = UserSerializer(user).data
+            serialized_user['token'] = token.key  # ✅ Attach the token directly to user object
+
+            return Response({
+                'user': serialized_user
+            }, status=status.HTTP_200_OK)
+
+        return Response(
+            {'msg': 'Invalid credentials or inactive account'},
+            status=status.HTTP_401_UNAUTHORIZED
+        )
 
 class SignOut(generics.DestroyAPIView):
     def delete(self, request):
