@@ -247,6 +247,7 @@ class DrinkSerializer(serializers.ModelSerializer):
     class Meta:
         model = Drink
         fields = '__all__'
+        read_only_fields = ['owner']
 
 
 ### Test Serializers ###
