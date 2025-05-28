@@ -296,7 +296,16 @@ class ResultSerializer(serializers.ModelSerializer):
         ]
 
     def create(self, validated_data):
-        return Result.objects.create(**validated_data)
+        the_test = validated_data.get('the_test')
+        owner = validated_data.get('owner')
+
+        result = Result.objects.create(**validated_data)
+
+        if owner and the_test in owner.assigned_tests.all():
+            owner.assigned_tests.remove(the_test)
+            owner.save()
+
+        return result
 
 
 ### User Serializer ###

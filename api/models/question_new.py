@@ -11,6 +11,8 @@ class Question_new(models.Model):
     option3 = models.CharField(max_length=100)
     option4 = models.CharField(max_length=100)
     answer = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     pass
     owner = models.ForeignKey(
         get_user_model(),
@@ -30,7 +32,9 @@ class Question_new(models.Model):
             'option2': self.option2,
             'option3': self.option3,
             'option4': self.option4,
-            'answer': self.answer
+            'answer': self.answer,
+            'created_at': self.created_at,
+            'updated_at': self.updated_at
         }
 
 

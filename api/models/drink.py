@@ -22,6 +22,8 @@ class Drink(models.Model):
   con_dairy = models.BooleanField()
   is_vegan = models.BooleanField()
   is_vegetarian = models.BooleanField()
+  created_at = models.DateTimeField(auto_now_add=True)
+  updated_at = models.DateTimeField(auto_now=True)
   owner = models.ForeignKey(
       get_user_model(),
       on_delete=models.CASCADE
@@ -56,4 +58,6 @@ class Drink(models.Model):
         'con_dairy': self.con_dairy,
         'is_vegan': self.is_vegan,
         'is_vegetarian': self.is_vegetarian,
+        'created_at': self.created_at,
+        'updated_at': self.updated_at
     }
