@@ -13,6 +13,14 @@ class Question_new(models.Model):
     answer = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # Link question to a specific restaurant (nullable for existing data; make required after backfill)
+    restaurant = models.ForeignKey(
+        "Restaurant",
+        on_delete=models.CASCADE,
+        related_name="questions",
+        null=True,
+        blank=True,
+    )
     pass
     owner = models.ForeignKey(
         get_user_model(),
@@ -34,7 +42,6 @@ class Question_new(models.Model):
             'option4': self.option4,
             'answer': self.answer,
             'created_at': self.created_at,
-            'updated_at': self.updated_at
+            'updated_at': self.updated_at,
+            'restaurant': self.restaurant_id,
         }
-
-

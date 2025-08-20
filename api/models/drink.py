@@ -24,6 +24,14 @@ class Drink(models.Model):
   is_vegetarian = models.BooleanField()
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
+  # Link drink to a specific restaurant (nullable for existing data; make required after backfill)
+  restaurant = models.ForeignKey(
+      "Restaurant",
+      on_delete=models.CASCADE,
+      related_name="drinks",
+      null=True,
+      blank=True,
+  )
   owner = models.ForeignKey(
       get_user_model(),
       on_delete=models.CASCADE
@@ -59,5 +67,6 @@ class Drink(models.Model):
         'is_vegan': self.is_vegan,
         'is_vegetarian': self.is_vegetarian,
         'created_at': self.created_at,
-        'updated_at': self.updated_at
+        'updated_at': self.updated_at,
+        'restaurant': self.restaurant_id,
     }

@@ -9,13 +9,23 @@ class Result(models.Model):
     score = models.CharField(max_length=20)
     correct = models.CharField(max_length=10)
     wrong = models.CharField(max_length=10)
+    wrong_question_ids = models.JSONField(default=list, blank=True)
     total = models.CharField(max_length=10)
     percent = models.CharField(max_length=10)
     time = models.CharField(max_length=20)
+    time_completed = models.CharField(max_length=10)
     the_test = models.ForeignKey(
         Test_this,
         on_delete=models.CASCADE,
         related_name='test_results'
+    )
+    # Link result to a specific restaurant (nullable for existing data; make required after backfill)
+    restaurant = models.ForeignKey(
+        "Restaurant",
+        on_delete=models.CASCADE,
+        related_name="results",
+        null=True,
+        blank=True,
     )
     owner = models.ForeignKey(
         get_user_model(),
@@ -36,9 +46,12 @@ class Result(models.Model):
             'score': self.score,
             'correct': self.correct,
             'wrong': self.wrong,
+            'wrong_question_ids': self.wrong_question_ids,
             'total': self.total,
             'percent': self.percent,
             'time': self.time,
+            'time_completed': self.time_completed,
             'created_at': self.created_at,
-            'updated_at': self.updated_at
+            'updated_at': self.updated_at,
+            'restaurant': self.restaurant_id,
         }

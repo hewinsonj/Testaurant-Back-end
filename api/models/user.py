@@ -64,7 +64,25 @@ class User(AbstractBaseUser, PermissionsMixin):
         # Optional fields
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
-    role = models.CharField(max_length=100, blank=True, null=True)
+    restaurant = models.ForeignKey(
+        'Restaurant',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='users'
+    )
+    ROLE_CHOICES = (
+        ("Admin", "Admin"),
+        ("GeneralManager", "General Manager"),
+        ("Manager", "Manager"),
+        ("Employee", "Employee"),
+    )
+    role = models.CharField(
+        max_length=20,
+        choices=ROLE_CHOICES,
+        null=True,
+        blank=True
+    )
     hire_date = models.DateField(blank=True, null=True)
     # name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)

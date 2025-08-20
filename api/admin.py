@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-
 from .models.user import User
 from .models.question_new import Question_new
 from .models.food import Food
 from .models.drink import Drink
 from .models.result import Result
 from .models.test_this import Test_this
+from .models.restaurant import Restaurant
+from .models.editLog import EditLog
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
@@ -49,3 +50,5 @@ admin.site.register(Food)
 admin.site.register(Drink)
 admin.site.register(Test_this)
 admin.site.register(Result)
+admin.site.register(Restaurant)
+admin.site.register(EditLog)

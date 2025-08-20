@@ -87,18 +87,23 @@ class ChangePassword(generics.UpdateAPIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+
 class Users(generics.ListCreateAPIView):
-    permission_classes=(IsAuthenticated,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     def get(self, request):
         """Index request"""
-        # Get all the test_thiss:
+        # NOTE: This current role-only check isn't very secure.
+        # Plan: update to enforce restaurant-based matching for more robust authorization.
+        # Role-based authorization
+        role = getattr(request.user, "role", "").lower()
+        if role not in ["manager", "generalmanager", "admin"]:
+            return Response({"msg": "Not authorized to view all users."}, status=status.HTTP_403_FORBIDDEN)
+        # Get all the users:
         users = User.objects.all()
-        # Filter the test_thiss by owner, so you can only see your owned test_thiss
-        # test_thiss = Test_this.objects
-        # Run the data through the serializer
         data = UserSerializer(users, many=True).data
-        return Response({ 'users': data })
+        return Response({'users': data})
     
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)

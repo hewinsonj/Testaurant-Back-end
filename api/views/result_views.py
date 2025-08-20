@@ -44,7 +44,8 @@ class Results(generics.ListCreateAPIView):
     serializer_class = ResultSerializer
 
     def get(self, request):
-        if getattr(request.user, 'role', None) == "manager":
+        role = (getattr(request.user, 'role', '') or '').lower()
+        if role in ('admin', 'generalmanager', 'manager'):
             results = Result.objects.all()
         else:
             results = Result.objects.filter(owner=request.user)
