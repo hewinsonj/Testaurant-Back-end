@@ -1,12 +1,15 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from api.models import EditLog
+from api.models import editLog
 from api.serializers import EditLogSerializer
+from api.permissions import IsAdminOrRestaurantManager
 
+# NOTE: Keep this un-routed externally. Logs should be server-generated (mixins/signals), not client POSTed.
 @api_view(['POST'])
 def log_edit(request, action, instance, before=None, after=None):
-    EditLog.objects.create(
+    editLog.objects.create(
         user=request.user,
         action=action,
         instance=instance,
@@ -18,13 +21,17 @@ def log_edit(request, action, instance, before=None, after=None):
 
 # ReadOnly ViewSet for EditLog
 class EditLogViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = EditLog.objects.all().order_by('-editDate')
+    permission_classes = [IsAuthenticated, IsAdminOrRestaurantManager]
     serializer_class = EditLogSerializer
 
     def get_queryset(self):
-        # Temporary role-based check; will later be updated to enforce restaurant-based scoping for more secure authorization
         user = self.request.user
-        if user.role in ["Admin", "GeneralManager", "Manager"]:
-            return EditLog.objects.all().order_by('-editDate')
-        else:
-            return EditLog.objects.filter(user=user).order_by('-editDate')
+        # Optimize FK access and enforce role + restaurant scoping
+        qs = editLog.objects.select_related('restaurant', 'user').order_by('-editDate')
+        role = getattr(user, 'role', None)
+        if role == 'Admin':
+            return qs
+        if role in ('GeneralManager', 'Manager'):
+            return qs.filter(restaurant=getattr(user, 'restaurant_id', None))
+        # Employees and others: no access
+        return qs.none()

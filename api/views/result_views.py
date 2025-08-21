@@ -45,10 +45,13 @@ class Results(generics.ListCreateAPIView):
 
     def get(self, request):
         role = (getattr(request.user, 'role', '') or '').lower()
-        if role in ('admin', 'generalmanager', 'manager'):
-            results = Result.objects.all()
+        qs = Result.objects.all()
+        if role == 'admin':
+            results = qs
+        elif role in ('generalmanager', 'manager'):
+            results = qs.filter(restaurant=getattr(request.user, 'restaurant_id', None))
         else:
-            results = Result.objects.filter(owner=request.user)
+            results = qs.filter(owner=request.user)
         data = ResultSerializer(results, many=True).data
         return Response({'results': data}, status=status.HTTP_200_OK)
 
@@ -74,8 +77,15 @@ class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
         # Locate the result to show
         result = get_object_or_404(Result, pk=pk)
         # Only want to show owned results?
-        if request.user != result.owner:
-            raise PermissionDenied('Unauthorized, you do not own this result')
+        role = (getattr(request.user, 'role', '') or '').lower()
+        if role == 'admin':
+            pass
+        elif role in ('generalmanager', 'manager'):
+            if result.restaurant_id != getattr(request.user, 'restaurant_id', None):
+                raise PermissionDenied('Unauthorized, restaurant mismatch')
+        else:
+            if request.user != result.owner:
+                raise PermissionDenied('Unauthorized, you do not own this result')
 
         # Run the data through the serializer so it's formatted
         data = ResultSerializer(result).data
@@ -86,28 +96,14 @@ class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
         # Locate result to delete
         result = get_object_or_404(Result, pk=pk)
         # Check the result's owner against the user making this request
-        if request.user != result.owner:
-            raise PermissionDenied('Unauthorized, you do not own this result')
+        role = (getattr(request.user, 'role', '') or '').lower()
+        if role == 'admin':
+            pass
+        elif role == 'generalmanager':
+            if result.restaurant_id != getattr(request.user, 'restaurant_id', None):
+                raise PermissionDenied('Unauthorized, restaurant mismatch')
+        else:
+            raise PermissionDenied('Unauthorized, only Admin or GeneralManager can delete results')
         # Only delete if the user owns the  result
         result.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-    def partial_update(self, request, pk):
-        """Update Request"""
-        # Locate Result
-        # get_object_or_404 returns a object representation of our Result
-        result = get_object_or_404(Result, pk=pk)
-        # Check the result's owner against the user making this request
-        # if request.user != result.owner:
-        #     raise PermissionDenied('Unauthorized, you do not own this result')
-
-        # Ensure the owner field is set to the current user's ID
-        request.data['result']['owner'] = request.user.id
-        # Validate updates with serializer
-        data = ResultSerializer(result, data=request.data['result'], partial=True)
-        if data.is_valid():
-            # Save & send a 204 no content
-            data.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        # If the data is not valid, return a response with the errors
-        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)

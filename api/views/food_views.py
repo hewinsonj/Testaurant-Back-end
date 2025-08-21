@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404
 
 from ..models.food import Food
 from ..serializers import FoodSerializer
+from api.models import editLog
+from django.forms.models import model_to_dict
 
 # Create your views here.
 class Foods(generics.ListCreateAPIView):
@@ -13,21 +15,54 @@ class Foods(generics.ListCreateAPIView):
     serializer_class = FoodSerializer
     def get(self, request):
         """Index request"""
-        # Get all the foods:
-        foods = Food.objects.all()
-        # Filter the foods by owner, so you can only see your owned foods
-        # foods = Food.objects.filter(owner=request.user.id)
-        # Run the data through the serializer
-        data = FoodSerializer(foods, many=True).data
-        return Response({ 'foods': data })
+        user = request.user
+        qs = Food.objects.select_related('restaurant', 'owner').order_by('-updated_at')
+        role = getattr(user, 'role', None)
+        if role == 'Admin':
+            # Admin can optionally filter by restaurant via query param
+            restaurant_id = request.query_params.get('restaurant')
+            if restaurant_id:
+                qs = qs.filter(restaurant=restaurant_id)
+        elif role in ('GeneralManager', 'Manager'):
+            qs = qs.filter(restaurant=getattr(user, 'restaurant_id', None))
+        else:
+            # Employees: allow read if restaurant matches
+            qs = qs.filter(restaurant=getattr(user, 'restaurant_id', None))
+        data = FoodSerializer(qs, many=True).data
+        return Response({'foods': data})
 
     def post(self, request):
-        print("🛠 Incoming food data:", request.data)  # optional debug
-        food_data = request.data.get('food')  # ✅ Unwrap it here
+        role = getattr(request.user, 'role', None)
+        if role not in ('Admin', 'GeneralManager', 'Manager'):
+            return Response({'detail': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
+        print("🛠 Incoming food data:", request.data)
+        food_data = request.data.get('food')
+        if not food_data:
+            return Response({'detail': 'Missing food payload'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Force restaurant based on actor unless Admin explicitly sets one
+        if role == 'Admin':
+            # allow provided restaurant or default to user's restaurant
+            food_data.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
+        else:
+            food_data['restaurant'] = getattr(request.user, 'restaurant_id', None)
 
         serializer = FoodSerializer(data=food_data)
         if serializer.is_valid():
-            serializer.save(owner=request.user)
+            instance = serializer.save(owner=request.user)
+            # Try to write an edit log; do not fail the request if logging fails
+            try:
+                editLog.objects.create(
+                    user=request.user,
+                    action='create',
+                    target_model=instance.__class__.__name__,
+                    target_id=instance.pk,
+                    restaurant=getattr(instance, 'restaurant', None),
+                    before=None,
+                    after=model_to_dict(instance),
+                )
+            except Exception as e:
+                print('⚠️ editLog create failed:', e)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             print("❌ Food creation error:", serializer.errors)
@@ -36,43 +71,68 @@ class FoodDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
     def get(self, request, pk):
         """Show request"""
-        # Locate the food to show
         food = get_object_or_404(Food, pk=pk)
-        # Only want to show owned foods?
-        if request.user != food.owner:
-            raise PermissionDenied('Unauthorized, you do not own this food')
-
-        # Run the data through the serializer so it's formatted
-        data = FoodSerializer(food).data
-        return Response({ 'food': data })
+        role = getattr(request.user, 'role', None)
+        if role == 'Admin' or getattr(request.user, 'restaurant_id', None) == getattr(food, 'restaurant_id', None):
+            data = FoodSerializer(food).data
+            return Response({'food': data})
+        raise PermissionDenied('Unauthorized')
 
     def delete(self, request, pk):
         """Delete request"""
-        # Locate food to delete
         food = get_object_or_404(Food, pk=pk)
-        # Check the food's owner against the user making this request
-        if request.user != food.owner:
-            raise PermissionDenied('Unauthorized, you do not own this food')
-        # Only delete if the user owns the  food
+        role = getattr(request.user, 'role', None)
+        if role not in ('Admin', 'GeneralManager', 'Manager'):
+            raise PermissionDenied('Unauthorized')
+        if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(food, 'restaurant_id', None):
+            raise PermissionDenied('Unauthorized')
+        before = model_to_dict(food)
         food.delete()
+        try:
+            editLog.objects.create(
+                user=request.user,
+                action='delete',
+                target_model='Food',
+                target_id=pk,
+                restaurant=getattr(request.user, 'restaurant', None),
+                before=before,
+                after=None,
+            )
+        except Exception as e:
+            print('⚠️ editLog delete log failed:', e)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk):
         """Update Request"""
-        # Locate Food
-        # get_object_or_404 returns a object representation of our Food
         food = get_object_or_404(Food, pk=pk)
-        # Check the food's owner against the user making this request
-        # if request.user != food.owner:
-        #     raise PermissionDenied('Unauthorized, you do not own this food')
+        role = getattr(request.user, 'role', None)
+        if role not in ('Admin', 'GeneralManager', 'Manager'):
+            raise PermissionDenied('Unauthorized')
+        if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(food, 'restaurant_id', None):
+            raise PermissionDenied('Unauthorized')
 
-        # Ensure the owner field is set to the current user's ID
-        request.data['food']['owner'] = request.user.id
-        # Validate updates with serializer
-        data = FoodSerializer(food, data=request.data['food'], partial=True)
+        payload = request.data.get('food') or {}
+        # Lock restaurant for non-admins
+        if role != 'Admin':
+            payload['restaurant'] = getattr(request.user, 'restaurant_id', None)
+        # Always preserve owner as the actor
+        payload['owner'] = request.user.id
+
+        before = model_to_dict(food)
+        data = FoodSerializer(food, data=payload, partial=True)
         if data.is_valid():
-            # Save & send a 204 no content
-            data.save()
+            instance = data.save()
+            try:
+                editLog.objects.create(
+                    user=request.user,
+                    action='update',
+                    target_model=instance.__class__.__name__,
+                    target_id=instance.pk,
+                    restaurant=getattr(instance, 'restaurant', None),
+                    before=before,
+                    after=model_to_dict(instance),
+                )
+            except Exception as e:
+                print('⚠️ editLog update log failed:', e)
             return Response(status=status.HTTP_204_NO_CONTENT)
-        # If the data is not valid, return a response with the errors
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)

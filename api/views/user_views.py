@@ -93,19 +93,66 @@ class Users(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     def get(self, request):
-        """Index request"""
-        # NOTE: This current role-only check isn't very secure.
-        # Plan: update to enforce restaurant-based matching for more robust authorization.
-        # Role-based authorization
-        role = getattr(request.user, "role", "").lower()
-        if role not in ["manager", "generalmanager", "admin"]:
-            return Response({"msg": "Not authorized to view all users."}, status=status.HTTP_403_FORBIDDEN)
-        # Get all the users:
-        users = User.objects.all()
-        data = UserSerializer(users, many=True).data
-        return Response({'users': data})
+        """Index request
+        Admin: can list all users (optionally filter by ?restaurant=<id>)
+        GeneralManager/Manager: can list users for their own restaurant only
+        Employees: forbidden
+        """
+        role = (getattr(request.user, "role", "") or "").lower()
+        qs = User.objects.all()
+        if role == "admin":
+            restaurant_id = request.query_params.get("restaurant")
+            if restaurant_id:
+                qs = qs.filter(restaurant=restaurant_id)
+        elif role in ("generalmanager", "manager"):
+            qs = qs.filter(restaurant=getattr(request.user, "restaurant_id", None))
+        else:
+            return Response({"msg": "Not authorized to view users."}, status=status.HTTP_403_FORBIDDEN)
+
+        data = UserSerializer(qs, many=True).data
+        return Response({"users": data})
     
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
     queryset = User.objects.all()
+
+    def get(self, request, pk):
+        """Show request with role/restaurant scoping"""
+        user_obj = get_object_or_404(User, pk=pk)
+        role = (getattr(request.user, "role", "") or "").lower()
+        if role == "admin":
+            pass
+        elif role in ("generalmanager", "manager"):
+            if getattr(request.user, "restaurant_id", None) != getattr(user_obj, "restaurant_id", None):
+                return Response({"msg": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            if request.user.id != user_obj.id:
+                return Response({"msg": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+        data = UserSerializer(user_obj).data
+        return Response({"user": data})
+
+    def delete(self, request, pk):
+        user_obj = get_object_or_404(User, pk=pk)
+        role = (getattr(request.user, "role", "") or "").lower()
+        if role != "admin":
+            return Response({"msg": "Only Admin can delete users."}, status=status.HTTP_403_FORBIDDEN)
+        user_obj.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def partial_update(self, request, pk):
+        user_obj = get_object_or_404(User, pk=pk)
+        role = (getattr(request.user, "role", "") or "").lower()
+        if role == "admin":
+            pass
+        elif role in ("generalmanager", "manager"):
+            if getattr(request.user, "restaurant_id", None) != getattr(user_obj, "restaurant_id", None):
+                return Response({"msg": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+        else:
+            if request.user.id != user_obj.id:
+                return Response({"msg": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+        serializer = UserSerializer(user_obj, data=request.data.get("user", request.data), partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

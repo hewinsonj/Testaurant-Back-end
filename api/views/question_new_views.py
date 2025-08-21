@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404
 
 from ..models.question_new import Question_new
 from ..serializers import Question_newSerializer
+from api.models import editLog
+from django.forms.models import model_to_dict
 
 # Create your views here.
 class Question_news(generics.ListCreateAPIView):
@@ -13,70 +15,117 @@ class Question_news(generics.ListCreateAPIView):
     serializer_class = Question_newSerializer
     def get(self, request):
         """Index request"""
-        # Get all the question_news:
-        question_news = Question_new.objects.all()
-        # Filter the question_news by owner, so you can only see your owned question_news
-        # question_news = Question_new.objects
-        # Run the data through the serializer
-        data = Question_newSerializer(question_news, many=True).data
-        return Response({ 'question_news': data })
+        user = request.user
+        qs = Question_new.objects.select_related('restaurant', 'owner').order_by('-updated_at')
+        role = getattr(user, 'role', None)
+        if role == 'Admin':
+            restaurant_id = request.query_params.get('restaurant')
+            if restaurant_id:
+                qs = qs.filter(restaurant=restaurant_id)
+        elif role in ('GeneralManager', 'Manager'):
+            qs = qs.filter(restaurant=getattr(user, 'restaurant_id', None))
+        else:
+            # Employees: allow read if restaurant matches
+            qs = qs.filter(restaurant=getattr(user, 'restaurant_id', None))
+        data = Question_newSerializer(qs, many=True).data
+        return Response({'question_news': data})
 
     def post(self, request):
-        print(request.data)
-        """Create request"""
-        # Add user to request data object
-        request.data['question_new']['owner'] = request.user.id
-        # Serialize/create question_new
-        question_new = Question_newSerializer(data=request.data['question_new'])
-        # If the question_new data is valid according to our serializer...
-        if question_new.is_valid():
-            # Save the created question_new & send a response
-            question_new.save()
-            return Response({ 'question_new': question_new.data }, status=status.HTTP_201_CREATED)
-        # If the data is not valid, return a response with the errors
-        return Response(question_new.errors, status=status.HTTP_400_BAD_REQUEST)
+        role = getattr(request.user, 'role', None)
+        if role not in ('Admin', 'GeneralManager', 'Manager'):
+            return Response({'detail': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
+        print("🛠 Incoming question_new data:", request.data)
+        payload = request.data.get('question_new')
+        if not payload:
+            return Response({'detail': 'Missing question_new payload'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if role == 'Admin':
+            payload.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
+        else:
+            payload['restaurant'] = getattr(request.user, 'restaurant_id', None)
+
+        serializer = Question_newSerializer(data=payload)
+        if serializer.is_valid():
+            instance = serializer.save(owner=request.user)
+            try:
+                editLog.objects.create(
+                    user=request.user,
+                    action='create',
+                    target_model=instance.__class__.__name__,
+                    target_id=instance.pk,
+                    restaurant=getattr(instance, 'restaurant', None),
+                    before=None,
+                    after=model_to_dict(instance),
+                )
+            except Exception as e:
+                print('⚠️ editLog create failed:', e)
+            return Response({'question_new': serializer.data}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
     def get(self, request, pk):
         """Show request"""
-        # Locate the question_new to show
         question_new = get_object_or_404(Question_new, pk=pk)
-        # Only want to show owned question_news?
-        if request.user != question_new.owner:
-            raise PermissionDenied('Unauthorized, you do not own this question_new')
-
-        # Run the data through the serializer so it's formatted
-        data = Question_newSerializer(question_new).data
-        return Response({ 'question_new': data })
+        role = getattr(request.user, 'role', None)
+        if role == 'Admin' or getattr(request.user, 'restaurant_id', None) == getattr(question_new, 'restaurant_id', None):
+            data = Question_newSerializer(question_new).data
+            return Response({'question_new': data})
+        raise PermissionDenied('Unauthorized')
 
     def delete(self, request, pk):
         """Delete request"""
-        # Locate question_new to delete
         question_new = get_object_or_404(Question_new, pk=pk)
-        # Check the question_new's owner against the user making this request
-        # if request.user != question_new.owner:
-        #     raise PermissionDenied('Unauthorized, you do not own this question_new')
-        # Only delete if the user owns the  question_new
+        role = getattr(request.user, 'role', None)
+        if role not in ('Admin', 'GeneralManager', 'Manager'):
+            raise PermissionDenied('Unauthorized')
+        if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(question_new, 'restaurant_id', None):
+            raise PermissionDenied('Unauthorized')
+        before = model_to_dict(question_new)
         question_new.delete()
+        try:
+            editLog.objects.create(
+                user=request.user,
+                action='delete',
+                target_model='Question_new',
+                target_id=pk,
+                restaurant=getattr(request.user, 'restaurant', None),
+                before=before,
+                after=None,
+            )
+        except Exception as e:
+            print('⚠️ editLog delete log failed:', e)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk):
         """Update Request"""
-        # Locate Question_new
-        # get_object_or_404 returns a object representation of our Question_new
         question_new = get_object_or_404(Question_new, pk=pk)
-        # Check the question_new's owner against the user making this request
-        if request.user != question_new.owner:
-            raise PermissionDenied('Unauthorized, you do not own this question_new')
+        role = getattr(request.user, 'role', None)
+        if role not in ('Admin', 'GeneralManager', 'Manager'):
+            raise PermissionDenied('Unauthorized')
+        if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(question_new, 'restaurant_id', None):
+            raise PermissionDenied('Unauthorized')
 
-        # Ensure the owner field is set to the current user's ID
-        # request.data['question_new']['owner'] = request.user.id
-        # Validate updates with serializer
-        data = Question_newSerializer(question_new, data=request.data['question_new'], partial=True)
+        payload = request.data.get('question_new') or {}
+        if role != 'Admin':
+            payload['restaurant'] = getattr(request.user, 'restaurant_id', None)
+        payload['owner'] = request.user.id
+
+        before = model_to_dict(question_new)
+        data = Question_newSerializer(question_new, data=payload, partial=True)
         if data.is_valid():
-            # Save & send a 204 no content
-            data.save()
+            instance = data.save()
+            try:
+                editLog.objects.create(
+                    user=request.user,
+                    action='update',
+                    target_model=instance.__class__.__name__,
+                    target_id=instance.pk,
+                    restaurant=getattr(instance, 'restaurant', None),
+                    before=before,
+                    after=model_to_dict(instance),
+                )
+            except Exception as e:
+                print('⚠️ editLog update log failed:', e)
             return Response(status=status.HTTP_204_NO_CONTENT)
-        # If the data is not valid, return a response with the errors
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
