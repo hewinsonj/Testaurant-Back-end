@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 from ..models.result import Result
 from ..serializers import ResultSerializer
@@ -49,7 +50,13 @@ class Results(generics.ListCreateAPIView):
         if role == 'admin':
             results = qs
         elif role in ('generalmanager', 'manager'):
-            results = qs.filter(restaurant=getattr(request.user, 'restaurant_id', None))
+            user_rest_id = getattr(request.user, 'restaurant_id', None)
+            if user_rest_id is None:
+                # If the user has no restaurant, allow all results (null-tolerant on both sides)
+                results = qs
+            else:
+                # Allow same-restaurant OR results with no restaurant set
+                results = qs.filter(Q(restaurant=user_rest_id) | Q(restaurant__isnull=True))
         else:
             results = qs.filter(owner=request.user)
         data = ResultSerializer(results, many=True).data
@@ -81,7 +88,10 @@ class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
         if role == 'admin':
             pass
         elif role in ('generalmanager', 'manager'):
-            if result.restaurant_id != getattr(request.user, 'restaurant_id', None):
+            user_rest_id = getattr(request.user, 'restaurant_id', None)
+            res_rest_id = result.restaurant_id
+            # Only enforce mismatch when both sides have a restaurant
+            if user_rest_id is not None and res_rest_id is not None and user_rest_id != res_rest_id:
                 raise PermissionDenied('Unauthorized, restaurant mismatch')
         else:
             if request.user != result.owner:
@@ -100,7 +110,9 @@ class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
         if role == 'admin':
             pass
         elif role == 'generalmanager':
-            if result.restaurant_id != getattr(request.user, 'restaurant_id', None):
+            user_rest_id = getattr(request.user, 'restaurant_id', None)
+            res_rest_id = result.restaurant_id
+            if user_rest_id is not None and res_rest_id is not None and user_rest_id != res_rest_id:
                 raise PermissionDenied('Unauthorized, restaurant mismatch')
         else:
             raise PermissionDenied('Unauthorized, only Admin or GeneralManager can delete results')

@@ -5,6 +5,8 @@ from .views.test_this_views import Test_thiss, Test_thisDetail
 from .views.result_views import Results, ResultDetail, MyResults
 from .views.drink_views import Drinks, DrinkDetail
 from .views.user_views import SignUp, SignIn, SignOut, ChangePassword, Users,UserDetail
+from .views.restaurant_views import RestaurantViewSet
+from .views.editLog_views import EditLogViewSet
 
 
 urlpatterns = [
@@ -27,4 +29,8 @@ urlpatterns = [
     path('users/<int:pk>/', UserDetail.as_view(), name='users-detail'),
     path('results/', Results.as_view(), name='results'),
     path('results/mine/', MyResults.as_view(), name='my-results'),
+    path('restaurants/', RestaurantViewSet.as_view({'get': 'list', 'post': 'create'}), name='restaurants'),
+    path('restaurants/<int:pk>/', RestaurantViewSet.as_view({'get': 'retrieve', 'put': 'update', 'patch': 'partial_update', 'delete': 'destroy'}), name='restaurant-detail'),
+    path('edit_logs/', EditLogViewSet.as_view({'get': 'list'}), name='edit_logs'),
+    path('edit_logs/<int:pk>/', EditLogViewSet.as_view({'get': 'retrieve'}), name='edit_log-detail'),
 ]

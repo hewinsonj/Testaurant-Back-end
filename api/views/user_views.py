@@ -6,9 +6,41 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user, authenticate, login, logout
 from rest_framework.authtoken.models import Token
 
+from api.models.editLog import EditLog
+from django.forms.models import model_to_dict
 
 from ..serializers import UserSerializer, UserRegisterSerializer,  ChangePasswordSerializer
 from ..models.user import User
+
+# --- EditLog helpers (JSON safe) ---
+
+def _json_safe(val):
+    if isinstance(val, (str, int, float, bool)) or val is None:
+        return val
+    if hasattr(val, 'pk'):
+        return val.pk
+    if isinstance(val, (list, tuple, set)):
+        return [_json_safe(v) for v in val]
+    if isinstance(val, dict):
+        return {k: _json_safe(v) for k, v in val.items()}
+    return str(val)
+
+
+def _build_changes(before, after):
+    try:
+        before = before or {}
+        after = after or {}
+        keys = set(before.keys()) | set(after.keys())
+        fields_changed = [k for k in keys if before.get(k) != after.get(k)]
+        return {
+            "before": {k: _json_safe(v) for k, v in before.items()} or None,
+            "after": {k: _json_safe(v) for k, v in after.items()} or None,
+            "fields_changed": fields_changed,
+        }
+    except Exception:
+        return {"before": str(before), "after": str(after), "fields_changed": []}
+
+# -----------------------------------
 
 class SignUp(generics.CreateAPIView):
     authentication_classes = ()
@@ -101,9 +133,8 @@ class Users(generics.ListCreateAPIView):
         role = (getattr(request.user, "role", "") or "").lower()
         qs = User.objects.all()
         if role == "admin":
-            restaurant_id = request.query_params.get("restaurant")
-            if restaurant_id:
-                qs = qs.filter(restaurant=restaurant_id)
+            # Admins see all users regardless of restaurant
+            pass
         elif role in ("generalmanager", "manager"):
             qs = qs.filter(restaurant=getattr(request.user, "restaurant_id", None))
         else:
@@ -151,8 +182,28 @@ class UserDetail(generics.RetrieveUpdateDestroyAPIView):
         else:
             if request.user.id != user_obj.id:
                 return Response({"msg": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
-        serializer = UserSerializer(user_obj, data=request.data.get("user", request.data), partial=True)
+
+        payload = request.data.get("user", request.data)
+        before = model_to_dict(user_obj)
+        serializer = UserSerializer(user_obj, data=payload, partial=True)
         if serializer.is_valid():
-            serializer.save()
+            instance = serializer.save()
+            # Log only PATCH updates
+            try:
+                after_dict = model_to_dict(instance)
+                kwargs = dict(
+                    item_type=EditLog.ITEM_USER,
+                    item_id=instance.pk,
+                    action=EditLog.ACTION_UPDATE,
+                    editor=request.user,
+                    restaurant=getattr(instance, 'restaurant', None),
+                    item_name_snapshot=(f"{getattr(instance, 'first_name', '')} {getattr(instance, 'last_name', '')}".strip() or getattr(instance, 'email', '')),
+                    editor_name_snapshot=(f"{getattr(request.user, 'first_name', '')} {getattr(request.user, 'last_name', '')}".strip() or getattr(request.user, 'email', '')),
+                    changes=_build_changes(before, after_dict),
+                )
+                EditLog.objects.create(**kwargs)
+            except Exception as e:
+                print('⚠️ EditLog (User) update log failed:', e)
             return Response(serializer.data, status=status.HTTP_200_OK)
+        print('[User PATCH] validation errors:', serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -10,12 +10,14 @@ class EditLog(models.Model):
     ITEM_QUESTION = "Question"
     ITEM_DRINK    = "Drink"
     ITEM_FOOD     = "Food"
+    ITEM_USER     = "User"
 
     ITEM_TYPE_CHOICES = [
         (ITEM_TEST, "Test"),
         (ITEM_QUESTION, "Question"),
         (ITEM_DRINK, "Drink"),
         (ITEM_FOOD, "Food"),
+        (ITEM_USER, "User"),
     ]
 
     # How it changed

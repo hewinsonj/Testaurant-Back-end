@@ -19,7 +19,7 @@ class Result(models.Model):
         on_delete=models.CASCADE,
         related_name='test_results'
     )
-    # Link result to a specific restaurant (nullable for existing data; make required after backfill)
+    # Link result to a specific restaurant (nullable for existing data; make required after backfill)re
     restaurant = models.ForeignKey(
         "Restaurant",
         on_delete=models.CASCADE,

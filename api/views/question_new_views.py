@@ -6,8 +6,23 @@ from django.shortcuts import get_object_or_404
 
 from ..models.question_new import Question_new
 from ..serializers import Question_newSerializer
-from api.models import editLog
+from api.models.editLog import EditLog
 from django.forms.models import model_to_dict
+
+# Helper to build EditLog.changes structure
+def _build_changes(before, after):
+    try:
+        before = before or {}
+        after = after or {}
+        keys = set(before.keys()) | set(after.keys())
+        fields_changed = [k for k in keys if before.get(k) != after.get(k)]
+        return {
+            "before": before or None,
+            "after": after or None,
+            "fields_changed": fields_changed,
+        }
+    except Exception:
+        return {"before": before, "after": after, "fields_changed": []}
 
 # Create your views here.
 class Question_news(generics.ListCreateAPIView):
@@ -47,18 +62,6 @@ class Question_news(generics.ListCreateAPIView):
         serializer = Question_newSerializer(data=payload)
         if serializer.is_valid():
             instance = serializer.save(owner=request.user)
-            try:
-                editLog.objects.create(
-                    user=request.user,
-                    action='create',
-                    target_model=instance.__class__.__name__,
-                    target_id=instance.pk,
-                    restaurant=getattr(instance, 'restaurant', None),
-                    before=None,
-                    after=model_to_dict(instance),
-                )
-            except Exception as e:
-                print('⚠️ editLog create failed:', e)
             return Response({'question_new': serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -68,7 +71,16 @@ class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
         """Show request"""
         question_new = get_object_or_404(Question_new, pk=pk)
         role = getattr(request.user, 'role', None)
-        if role == 'Admin' or getattr(request.user, 'restaurant_id', None) == getattr(question_new, 'restaurant_id', None):
+        user_restaurant_id = getattr(request.user, 'restaurant_id', None)
+        question_restaurant_id = getattr(question_new, 'restaurant_id', None)
+
+        # Allow Admin always.
+        # For others, allow if restaurants match OR if the question has no restaurant assigned.
+        if (
+            role == 'Admin'
+            or question_restaurant_id is None
+            or user_restaurant_id == question_restaurant_id
+        ):
             data = Question_newSerializer(question_new).data
             return Response({'question_new': data})
         raise PermissionDenied('Unauthorized')
@@ -81,20 +93,7 @@ class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
             raise PermissionDenied('Unauthorized')
         if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(question_new, 'restaurant_id', None):
             raise PermissionDenied('Unauthorized')
-        before = model_to_dict(question_new)
         question_new.delete()
-        try:
-            editLog.objects.create(
-                user=request.user,
-                action='delete',
-                target_model='Question_new',
-                target_id=pk,
-                restaurant=getattr(request.user, 'restaurant', None),
-                before=before,
-                after=None,
-            )
-        except Exception as e:
-            print('⚠️ editLog delete log failed:', e)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk):
@@ -115,17 +114,21 @@ class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
         data = Question_newSerializer(question_new, data=payload, partial=True)
         if data.is_valid():
             instance = data.save()
-            try:
-                editLog.objects.create(
-                    user=request.user,
-                    action='update',
-                    target_model=instance.__class__.__name__,
-                    target_id=instance.pk,
-                    restaurant=getattr(instance, 'restaurant', None),
-                    before=before,
-                    after=model_to_dict(instance),
-                )
-            except Exception as e:
-                print('⚠️ editLog update log failed:', e)
+            # Only log for PATCH (partial updates)
+            if True:  # partial is always True here
+                try:
+                    after_dict = model_to_dict(instance)
+                    EditLog.objects.create(
+                        item_type=EditLog.ITEM_QUESTION,
+                        item_id=instance.pk,
+                        action=EditLog.ACTION_UPDATE,
+                        editor=request.user,
+                        restaurant=getattr(instance, 'restaurant', None),
+                        item_name_snapshot=getattr(instance, 'question_str', '') or '',
+                        editor_name_snapshot=(f"{getattr(request.user, 'first_name', '')} {getattr(request.user, 'last_name', '')}".strip() or getattr(request.user, 'email', '')),
+                        changes=_build_changes(before, after_dict),
+                    )
+                except Exception as e:
+                    print('⚠️ EditLog update log failed:', e)
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)

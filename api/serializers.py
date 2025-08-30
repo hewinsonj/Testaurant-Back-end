@@ -92,10 +92,22 @@ class ResultSerializer(serializers.ModelSerializer):
     class Meta:
         model = Result
         fields = [
-            'id', 'the_test', 'owner', 'score', 'correct', 'wrong',
-            'percent', 'total', 'time', 'time_completed', 'restaurant',
-            'created_at', 'updated_at'
+            'id',
+            'score',
+            'correct',
+            'wrong',
+            'wrong_question_ids',
+            'total',
+            'percent',
+            'time',
+            'time_completed',
+            'the_test',
+            'owner',
+            'restaurant',
+            'created_at',
+            'updated_at',
         ]
+        read_only_fields = ['created_at', 'updated_at']
 
     def create(self, validated_data):
         the_test = validated_data.get('the_test')

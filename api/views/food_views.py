@@ -6,8 +6,23 @@ from django.shortcuts import get_object_or_404
 
 from ..models.food import Food
 from ..serializers import FoodSerializer
-from api.models import editLog
+from api.models.editLog import EditLog
 from django.forms.models import model_to_dict
+
+# Helper to build EditLog.changes structure
+def _build_changes(before, after):
+    try:
+        before = before or {}
+        after = after or {}
+        keys = set(before.keys()) | set(after.keys())
+        fields_changed = [k for k in keys if before.get(k) != after.get(k)]
+        return {
+            "before": before or None,
+            "after": after or None,
+            "fields_changed": fields_changed,
+        }
+    except Exception:
+        return {"before": before, "after": after, "fields_changed": []}
 
 # Create your views here.
 class Foods(generics.ListCreateAPIView):
@@ -52,17 +67,18 @@ class Foods(generics.ListCreateAPIView):
             instance = serializer.save(owner=request.user)
             # Try to write an edit log; do not fail the request if logging fails
             try:
-                editLog.objects.create(
-                    user=request.user,
-                    action='create',
-                    target_model=instance.__class__.__name__,
-                    target_id=instance.pk,
+                EditLog.objects.create(
+                    item_type=EditLog.ITEM_FOOD,
+                    item_id=instance.pk,
+                    action=EditLog.ACTION_CREATE,
+                    editor=request.user,
                     restaurant=getattr(instance, 'restaurant', None),
-                    before=None,
-                    after=model_to_dict(instance),
+                    item_name_snapshot=getattr(instance, 'name', '') or '',
+                    editor_name_snapshot=(f"{getattr(request.user, 'first_name', '')} {getattr(request.user, 'last_name', '')}".strip() or getattr(request.user, 'email', '')),
+                    changes=_build_changes(None, model_to_dict(instance)),
                 )
             except Exception as e:
-                print('⚠️ editLog create failed:', e)
+                print('⚠️ EditLog create failed:', e)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             print("❌ Food creation error:", serializer.errors)
@@ -89,17 +105,18 @@ class FoodDetail(generics.RetrieveUpdateDestroyAPIView):
         before = model_to_dict(food)
         food.delete()
         try:
-            editLog.objects.create(
-                user=request.user,
-                action='delete',
-                target_model='Food',
-                target_id=pk,
+            EditLog.objects.create(
+                item_type=EditLog.ITEM_FOOD,
+                item_id=pk,
+                action=EditLog.ACTION_DELETE,
+                editor=request.user,
                 restaurant=getattr(request.user, 'restaurant', None),
-                before=before,
-                after=None,
+                item_name_snapshot=str(before.get('name') or ''),
+                editor_name_snapshot=(f"{getattr(request.user, 'first_name', '')} {getattr(request.user, 'last_name', '')}".strip() or getattr(request.user, 'email', '')),
+                changes=_build_changes(before, None),
             )
         except Exception as e:
-            print('⚠️ editLog delete log failed:', e)
+            print('⚠️ EditLog delete log failed:', e)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk):
@@ -123,16 +140,18 @@ class FoodDetail(generics.RetrieveUpdateDestroyAPIView):
         if data.is_valid():
             instance = data.save()
             try:
-                editLog.objects.create(
-                    user=request.user,
-                    action='update',
-                    target_model=instance.__class__.__name__,
-                    target_id=instance.pk,
+                after_dict = model_to_dict(instance)
+                EditLog.objects.create(
+                    item_type=EditLog.ITEM_FOOD,
+                    item_id=instance.pk,
+                    action=EditLog.ACTION_UPDATE,
+                    editor=request.user,
                     restaurant=getattr(instance, 'restaurant', None),
-                    before=before,
-                    after=model_to_dict(instance),
+                    item_name_snapshot=getattr(instance, 'name', '') or '',
+                    editor_name_snapshot=(f"{getattr(request.user, 'first_name', '')} {getattr(request.user, 'last_name', '')}".strip() or getattr(request.user, 'email', '')),
+                    changes=_build_changes(before, after_dict),
                 )
             except Exception as e:
-                print('⚠️ editLog update log failed:', e)
+                print('⚠️ EditLog update log failed:', e)
             return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
