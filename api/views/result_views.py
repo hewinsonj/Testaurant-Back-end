@@ -4,6 +4,9 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.db import transaction
+from ..models.restaurant import Restaurant
+from ..models.test_this import Test_this
 
 from ..models.result import Result
 from ..serializers import ResultSerializer
@@ -63,19 +66,67 @@ class Results(generics.ListCreateAPIView):
         return Response({'results': data}, status=status.HTTP_200_OK)
 
     def post(self, request):
-        print(request.data)
-        """Create request"""
-        # Add user to request data object
-        request.data['result']['owner'] = request.user.id
-        # Serialize/create result
-        result = ResultSerializer(data=request.data['result'])
-        # If the result data is valid according to our serializer...
-        if result.is_valid():
-            # Save the created result & send a response
-            result.save()
-            return Response({ 'result': result.data }, status=status.HTTP_201_CREATED)
-        # If the data is not valid, return a response with the errors
-        return Response(result.errors, status=status.HTTP_400_BAD_REQUEST)
+        """Create Result (role-aware, restaurant-normalized)"""
+        role = (getattr(request.user, 'role', '') or '').lower()
+        if role not in ('admin', 'generalmanager', 'manager', 'employee'):
+            return Response({'detail': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
+
+        print('🛠 Incoming result data:', request.data)
+        # Accept either nested {result: {...}} or a flat body
+        data = request.data.get('result') or dict(request.data)
+        if not isinstance(data, dict) or not data:
+            return Response({'detail': 'Invalid payload'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Normalize restaurant based on role rules
+        if role == 'admin':
+            # Admin may set any valid restaurant id or leave it blank → None
+            rest = data.get('restaurant', getattr(request.user, 'restaurant_id', None))
+            if rest in ('', None):
+                data['restaurant'] = None
+            else:
+                try:
+                    rid = int(rest)
+                    # Validate existence; if missing, coerce to None rather than 500
+                    Restaurant.objects.only('id').get(pk=rid)
+                    data['restaurant'] = rid
+                except Exception:
+                    data['restaurant'] = None
+        else:
+            # Non-admins: prefer the actor's restaurant; if none, fallback to the test's restaurant
+            actor_rest_id = getattr(request.user, 'restaurant_id', None)
+            if actor_rest_id is not None:
+                data['restaurant'] = actor_rest_id
+            else:
+                test_pk = data.get('the_test')
+                test_rest_id = None
+                try:
+                    if test_pk is not None:
+                        test_obj = Test_this.objects.only('id', 'restaurant_id').get(pk=int(test_pk))
+                        test_rest_id = getattr(test_obj, 'restaurant_id', None)
+                except Exception:
+                    test_rest_id = None
+                data['restaurant'] = test_rest_id
+
+        print('🧭 Result restaurant resolved to:', data.get('restaurant'))
+
+        # Coerce the_test to an int if present
+        if 'the_test' in data:
+            try:
+                data['the_test'] = int(data['the_test'])
+            except Exception:
+                pass
+
+        # Owner is always the actor
+        data['owner'] = request.user.id
+
+        ser = ResultSerializer(data=data)
+        if not ser.is_valid():
+            print('⚠️ Result validation errors:', ser.errors)
+            return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        with transaction.atomic():
+            instance = ser.save()
+        return Response({'result': ser.data}, status=status.HTTP_201_CREATED)
 
 class ResultDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)

@@ -5,6 +5,7 @@ from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
 from ..models.question_new import Question_new
+from ..models.restaurant import Restaurant
 from ..serializers import Question_newSerializer
 from api.models.editLog import EditLog
 from django.forms.models import model_to_dict
@@ -49,20 +50,42 @@ class Question_news(generics.ListCreateAPIView):
         role = getattr(request.user, 'role', None)
         if role not in ('Admin', 'GeneralManager', 'Manager'):
             return Response({'detail': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
+
         print("🛠 Incoming question_new data:", request.data)
-        payload = request.data.get('question_new')
-        if not payload:
+        # Accept either {question_new: {...}} or a flat body
+        payload = request.data.get('question_new') or dict(request.data)
+        if not isinstance(payload, dict) or not payload:
             return Response({'detail': 'Missing question_new payload'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Normalize restaurant based on role
         if role == 'Admin':
-            payload.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
+            # Admin may set any valid restaurant id, or clear it to None
+            if 'restaurant' in payload:
+                rest = payload.get('restaurant')
+                if rest in ('', None):
+                    payload['restaurant'] = None
+                else:
+                    try:
+                        rid = int(rest)
+                        # Validate existence for a clearer error than a generic 400
+                        get_object_or_404(Restaurant, pk=rid)
+                        payload['restaurant'] = rid
+                    except Exception:
+                        payload['restaurant'] = None
+            else:
+                # Default to the actor's restaurant (which may be None)
+                payload.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
         else:
+            # Non-admins are locked to their own restaurant
             payload['restaurant'] = getattr(request.user, 'restaurant_id', None)
 
         serializer = Question_newSerializer(data=payload)
         if serializer.is_valid():
             instance = serializer.save(owner=request.user)
             return Response({'question_new': serializer.data}, status=status.HTTP_201_CREATED)
+
+        # Log validation errors to help diagnose 400s
+        print('⚠️ Question_new validation errors:', serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -104,10 +127,27 @@ class Question_newDetail(generics.RetrieveUpdateDestroyAPIView):
             raise PermissionDenied('Unauthorized')
         if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(question_new, 'restaurant_id', None):
             raise PermissionDenied('Unauthorized')
+        print("🛠 Incoming question_new data:", request.data)
 
         payload = request.data.get('question_new') or {}
-        if role != 'Admin':
+
+        if role == 'Admin':
+            if 'restaurant' in payload:
+                rest = payload.get('restaurant')
+                if rest in ('', None):
+                    payload['restaurant'] = None
+                else:
+                    try:
+                        rid = int(rest)
+                        get_object_or_404(Restaurant, pk=rid)
+                        payload['restaurant'] = rid
+                    except Exception:
+                        payload['restaurant'] = None
+        else:
+            # Lock restaurant for non-admins
             payload['restaurant'] = getattr(request.user, 'restaurant_id', None)
+
+        # Always preserve owner as the actor
         payload['owner'] = request.user.id
 
         before = model_to_dict(question_new)

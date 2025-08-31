@@ -51,21 +51,26 @@ class Foods(generics.ListCreateAPIView):
         if role not in ('Admin', 'GeneralManager', 'Manager'):
             return Response({'detail': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
         print("🛠 Incoming food data:", request.data)
-        food_data = request.data.get('food')
-        if not food_data:
+
+        # Accept either nested {food: {...}} or a flat body
+        food_data = request.data.get('food') or dict(request.data)
+        if not isinstance(food_data, dict) or not food_data:
             return Response({'detail': 'Missing food payload'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Force restaurant based on actor unless Admin explicitly sets one
+        # Normalize/force restaurant
         if role == 'Admin':
-            # allow provided restaurant or default to user's restaurant
-            food_data.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
+            if 'restaurant' in food_data:
+                rest = food_data.get('restaurant')
+                if rest in ('', None):
+                    food_data['restaurant'] = None
+            else:
+                food_data.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
         else:
             food_data['restaurant'] = getattr(request.user, 'restaurant_id', None)
 
         serializer = FoodSerializer(data=food_data)
         if serializer.is_valid():
             instance = serializer.save(owner=request.user)
-            # Try to write an edit log; do not fail the request if logging fails
             try:
                 EditLog.objects.create(
                     item_type=EditLog.ITEM_FOOD,
@@ -128,7 +133,9 @@ class FoodDetail(generics.RetrieveUpdateDestroyAPIView):
         if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(food, 'restaurant_id', None):
             raise PermissionDenied('Unauthorized')
 
-        payload = request.data.get('food') or {}
+        payload = request.data.get('food') or dict(request.data)
+        if not isinstance(payload, dict):
+            payload = {}
         # Lock restaurant for non-admins
         if role != 'Admin':
             payload['restaurant'] = getattr(request.user, 'restaurant_id', None)

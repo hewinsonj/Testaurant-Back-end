@@ -30,9 +30,19 @@ class EditLogSerializer(serializers.ModelSerializer):
 
 ### Question Serializer ###
 class Question_newSerializer(serializers.ModelSerializer):
+    # Accept restaurant as a FK id or null; don't force clients to send nested objects
+    restaurant = serializers.PrimaryKeyRelatedField(
+        queryset=Restaurant.objects.all(), required=False, allow_null=True
+    )
+    # Let the view set owner (e.g., save(owner=request.user)); don't require it from client
+    owner = serializers.PrimaryKeyRelatedField(
+        queryset=get_user_model().objects.all(), required=False
+    )
+
     class Meta:
         model = Question_new
         fields = '__all__'
+        read_only_fields = ['created_at', 'updated_at']
 
 
 ### Food Serializer ###
@@ -60,7 +70,7 @@ class Test_thisSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Test_this
-        fields = ('id', 'name', 'question_new', 'owner', 'created_at', 'updated_at', 'restaurant')
+        fields = ('id', 'name', 'question_new', 'owner', 'created_at', 'updated_at', 'restaurant', 'allotted_time')
 
     def create(self, validated_data):
         questions = validated_data.pop('question_new', [])

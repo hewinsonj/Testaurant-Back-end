@@ -54,13 +54,19 @@ class Drinks(generics.ListCreateAPIView):
             return Response({'detail': 'Unauthorized'}, status=status.HTTP_403_FORBIDDEN)
 
         print("🛠 Incoming drink data:", request.data)
-        drink_data = request.data.get('drink')
-        if not drink_data:
+        # Accept either nested {drink: {...}} or a flat body
+        drink_data = request.data.get('drink') or dict(request.data)
+        if not isinstance(drink_data, dict) or not drink_data:
             return Response({'detail': 'Missing drink payload'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Force restaurant based on actor unless Admin explicitly sets one
+        # Normalize/force restaurant
         if role == 'Admin':
-            drink_data.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
+            if 'restaurant' in drink_data:
+                rest = drink_data.get('restaurant')
+                if rest in ('', None):
+                    drink_data['restaurant'] = None
+            else:
+                drink_data.setdefault('restaurant', getattr(request.user, 'restaurant_id', None))
         else:
             drink_data['restaurant'] = getattr(request.user, 'restaurant_id', None)
 
@@ -131,9 +137,17 @@ class DrinkDetail(generics.RetrieveUpdateDestroyAPIView):
         if role != 'Admin' and getattr(request.user, 'restaurant_id', None) != getattr(drink, 'restaurant_id', None):
             raise PermissionDenied('Unauthorized')
 
-        payload = request.data.get('drink') or {}
-        # Lock restaurant for non-admins
-        if role != 'Admin':
+        payload = request.data.get('drink') or dict(request.data)
+        if not isinstance(payload, dict):
+            payload = {}
+
+        if role == 'Admin':
+            if 'restaurant' in payload:
+                rest = payload.get('restaurant')
+                if rest in ('', None):
+                    payload['restaurant'] = None
+        else:
+            # Lock restaurant for non-admins
             payload['restaurant'] = getattr(request.user, 'restaurant_id', None)
         # Always preserve owner as the actor
         payload['owner'] = request.user.id

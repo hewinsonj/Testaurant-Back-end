@@ -43,5 +43,5 @@ class Question_new(models.Model):
             'answer': self.answer,
             'created_at': self.created_at,
             'updated_at': self.updated_at,
-            'restaurant': self.restaurant_id,
+            'restaurant': self.restaurant,
         }
