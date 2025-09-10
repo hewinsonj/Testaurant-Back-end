@@ -120,6 +120,15 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # --- CORS/CSRF ---
 
+# --- TEMP: open up CORS for debugging, revert after verifying ---
+CORS_ALLOW_ALL_ORIGINS = True
+# keep these so preflights are clean
+from corsheaders.defaults import default_headers, default_methods
+CORS_ALLOW_HEADERS = list(default_headers) + ["authorization", "content-type"]
+CORS_ALLOW_METHODS = list(default_methods) + ["OPTIONS"]
+CORS_URLS_REGEX = r"^/.*$"
+
+
 CLIENT_ORIGIN = os.getenv("CLIENT_ORIGIN", "https://testaurantapp.netlify.app")  # default to Netlify app if not provided
 CLIENT_ORIGIN_DEV = os.getenv("CLIENT_ORIGIN_DEV", "http://localhost:3000")
 
@@ -128,10 +137,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.fly.dev",
 ] + [o for o in [CLIENT_ORIGIN, CLIENT_ORIGIN_DEV] if o]
 
-# --- CORS explicit allow-list (helps with strict preflights) ---
-from corsheaders.defaults import default_headers, default_methods
-
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "authorization",
