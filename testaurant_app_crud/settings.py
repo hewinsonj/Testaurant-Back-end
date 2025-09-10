@@ -17,9 +17,11 @@ SECRET_KEY = os.getenv("SECRET_KEY", os.getenv("SECRET", "change-me"))  # suppor
 
 # --- Hosts ---
 ALLOWED_HOSTS = [
+    "testaurant-api.fly.dev",
+    ".fly.dev",          # any fly subdomain (safe, broad)
+    ".internal",         # fly’s internal hostnames used by checks/proxy
     "localhost",
     "127.0.0.1",
-    ".fly.dev",             # Fly default app hostname
 ]
 _custom_host = os.getenv("ALLOWED_HOST")
 if _custom_host:

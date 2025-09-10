@@ -167,6 +167,9 @@ class UserRegisterSerializer(serializers.Serializer):
     is_superuser = serializers.BooleanField(default=False)
     is_active = serializers.BooleanField(default=True)
     is_staff = serializers.BooleanField(default=False)
+    restaurant = serializers.PrimaryKeyRelatedField(
+        queryset=Restaurant.objects.all(), required=False, allow_null=True
+    )
 
     def validate(self, data):
         if data['password'] != data['password_confirmation']:
