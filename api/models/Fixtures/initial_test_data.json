@@ -20,7 +20,9 @@
         "option3": "Felix Felicis",
         "option4": "Veritaserum",
         "answer": "Felix Felicis",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -33,7 +35,9 @@
         "option3": "Snape",
         "option4": "Draco Malfoy",
         "answer": "Grindelwald",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -46,7 +50,9 @@
         "option3": "Lumos",
         "option4": "Stupefy",
         "answer": "Protego",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -59,7 +65,9 @@
         "option3": "Norbert",
         "option4": "Buckbeak",
         "answer": "Grawp",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -72,7 +80,9 @@
         "option3": "Unicorn hair",
         "option4": "Thestral hair",
         "answer": "Phoenix feather",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -85,7 +95,9 @@
         "option3": "Rose",
         "option4": "Marie",
         "answer": "Jean",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -98,7 +110,9 @@
         "option3": "Wipes memories",
         "option4": "Reveals secrets",
         "answer": "Wipes memories",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -111,7 +125,9 @@
         "option3": "Sirius Black",
         "option4": "Neville Longbottom",
         "answer": "Molly Weasley",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -124,7 +140,9 @@
         "option3": "Narcissa Malfoy",
         "option4": "Walburga Black",
         "answer": "Merope Gaunt",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -137,7 +155,9 @@
         "option3": "Alohomora",
         "option4": "Lumos",
         "answer": "Accio",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -150,7 +170,9 @@
         "option3": "Tom Riddle",
         "option4": "Albus Dumbledore",
         "answer": "Severus Snape",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -163,7 +185,9 @@
         "option3": "Magical bird",
         "option4": "Magical insect",
         "answer": "Magical horse",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -176,7 +200,9 @@
         "option3": "Shell Cottage",
         "option4": "The Burrow",
         "answer": "4 Privet Drive",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -189,7 +215,9 @@
         "option3": "Gryffindor",
         "option4": "Slytherin",
         "answer": "Ravenclaw",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -202,7 +230,9 @@
         "option3": "Dobby",
         "option4": "Hokey",
         "answer": "Dobby",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -215,7 +245,9 @@
         "option3": "Peter Pettigrew",
         "option4": "Igor Karkaroff",
         "answer": "Barty Crouch Jr.",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -228,7 +260,9 @@
         "option3": "Devil’s Snare",
         "option4": "Fluxweed",
         "answer": "Mandrake",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -241,7 +275,9 @@
         "option3": "Bezoar",
         "option4": "Gillyweed",
         "answer": "Boomslang skin",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -254,7 +290,9 @@
         "option3": "The Resurrection Stone",
         "option4": "The Philosopher's Stone",
         "answer": "The Mirror of Erised",
-        "owner": 1
+        "owner": 6,
+        "created_at": "2024-11-02T12:00:00Z",
+        "updated_at": "2024-11-02T12:00:00Z"
       }
     },
     {
@@ -263,7 +301,7 @@
       "fields": {
         "name": "Harry Potter 1",
         "question_new": [1, 2, 3, 4, 5, 6, 7, 8, 9],
-        "owner": 1,
+        "owner": 6,
         "created_at": "2024-11-01T12:00:00Z",
         "updated_at": "2024-11-01T12:00:00Z"
       }
@@ -275,7 +313,7 @@
       "fields": {
         "name": "Harry Potter 2",
         "question_new": [10, 11, 12, 13, 14, 15, 16, 17, 18, 19],
-        "owner": 1,
+        "owner": 6,
         "created_at": "2024-10-01T12:00:00Z",
         "updated_at": "2024-10-01T12:00:00Z"
       }
@@ -292,10 +330,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": true,
         "con_sesame": false,
         "con_gluten": true,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -310,10 +353,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": true,
         "con_sesame": false,
         "con_gluten": true,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -328,10 +376,15 @@
         "con_shellfish": false,
         "con_soy": true,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": false,
         "con_sesame": false,
         "con_gluten": false,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": false,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -346,10 +399,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": true,
         "con_sesame": false,
         "con_gluten": true,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -364,10 +422,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": false,
         "con_sesame": false,
         "con_gluten": false,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -382,10 +445,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": true,
         "con_sesame": false,
         "con_gluten": true,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -400,10 +468,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": true,
         "con_sesame": false,
         "con_gluten": true,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": false,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -418,10 +491,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": true,
         "con_sesame": false,
         "con_gluten": true,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": false,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -436,10 +514,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": true,
         "con_sesame": false,
         "con_gluten": true,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -454,10 +537,15 @@
         "con_shellfish": false,
         "con_soy": true,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": false,
         "con_sesame": false,
         "con_gluten": false,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -475,10 +563,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": false,
         "con_sesame": false,
         "con_gluten": false,
-        "owner": 1
+        "is_vegan": false,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -496,10 +589,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": false,
         "con_sesame": false,
         "con_gluten": false,
-        "owner": 1
+        "is_vegan": true,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -517,10 +615,15 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": false,
         "con_sesame": false,
         "con_gluten": false,
-        "owner": 1
+        "is_vegan": true,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
     {
@@ -538,13 +641,18 @@
         "con_shellfish": false,
         "con_soy": false,
         "con_fish": false,
+        "con_dairy": false,
         "con_wheat": false,
         "con_sesame": false,
         "con_gluten": false,
-        "owner": 1
+        "is_vegan": true,
+        "is_vegetarian": true,
+        "owner": 6,
+        "created_at": "2024-11-01T12:00:00Z",
+        "updated_at": "2024-11-01T12:00:00Z"
       }
     },
-    {
+      {
         "model": "api.drink",
         "pk": 5,
         "fields": {
@@ -558,11 +666,16 @@
           "con_peanut": false,
           "con_shellfish": false,
           "con_soy": false,
-          "con_fish": false,
-          "con_wheat": false,
+        "con_fish": false,
+        "con_dairy": false,
+        "con_wheat": false,
           "con_sesame": false,
           "con_gluten": false,
-          "owner": 1
+          "is_vegan": true,
+          "is_vegetarian": true,
+          "owner": 6,
+          "created_at": "2024-11-01T12:00:00Z",
+          "updated_at": "2024-11-01T12:00:00Z"
         }
       },
       {
@@ -579,11 +692,16 @@
           "con_peanut": false,
           "con_shellfish": false,
           "con_soy": false,
-          "con_fish": false,
-          "con_wheat": false,
+        "con_fish": false,
+        "con_dairy": false,
+        "con_wheat": false,
           "con_sesame": false,
           "con_gluten": false,
-          "owner": 1
+          "is_vegan": true,
+          "is_vegetarian": true,
+          "owner": 6,
+          "created_at": "2024-11-01T12:00:00Z",
+          "updated_at": "2024-11-01T12:00:00Z"
         }
       }
   
